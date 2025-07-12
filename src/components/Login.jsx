@@ -1,0 +1,66 @@
+import React, { useState } from 'react';
+
+function Login({ onLogin }) {
+  const [role, setRole] = useState('admin');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (onLogin) onLogin(role);
+  };
+
+  return (
+    <div style={{
+      minHeight: '100vh',
+      width: '100vw',
+      background: 'linear-gradient(90deg, #1976d2 0%, #42a5f5 100%)',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      margin: 0,
+      padding: 0,
+    }}>
+      <div style={{
+        width: '100vw',
+        maxWidth: '100vw',
+        background: 'white',
+        borderRadius: 0,
+        boxShadow: 'none',
+        padding: '3rem 0',
+        textAlign: 'center',
+        margin: 0,
+      }}>
+        <h2 style={{ color: '#1976d2', marginBottom: '2rem', fontSize: '2.2rem' }}>Login</h2>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '3rem' }}>
+            <label style={{ fontSize: '1.3rem', color: '#333' }}>
+              <input
+                type="radio"
+                name="role"
+                value="admin"
+                checked={role === 'admin'}
+                onChange={() => setRole('admin')}
+                style={{ marginRight: 10 }}
+              />
+              Admin
+            </label>
+            <label style={{ fontSize: '1.3rem', color: '#333' }}>
+              <input
+                type="radio"
+                name="role"
+                value="leader"
+                checked={role === 'leader'}
+                onChange={() => setRole('leader')}
+                style={{ marginRight: 10 }}
+              />
+              Leader
+            </label>
+          </div>
+          <button type="submit" style={{ padding: '1rem 4rem', fontSize: '1.3rem', background: '#1976d2', color: 'white', border: 'none', borderRadius: 8, fontWeight: 600, boxShadow: '0 1px 4px #1976d233', cursor: 'pointer', letterSpacing: 1 }}>Login</button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+export default Login;
