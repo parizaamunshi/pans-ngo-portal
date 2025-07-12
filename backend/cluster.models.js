@@ -18,12 +18,12 @@ const artisanSchema = new mongoose.Schema({
     total_orders: {
         type: Number,
         required: true,
-        default:true
+        default:0
     },
     total_revenue: {
         type: Number,
         required: true,
-        default:true
+        default:0
     },
     current_order:{
         type:Number,
@@ -38,6 +38,11 @@ const artisanSchema = new mongoose.Schema({
     skills:{
         type:[String],
         require:false
+    },
+    years_of_experience:{
+        type: Number,
+        require: true,
+        default:0
     }
 })
 

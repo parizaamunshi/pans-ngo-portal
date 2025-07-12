@@ -2,7 +2,8 @@ require('dotenv').config({ path: '../.env' });
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const { Order } = require('./Order.models'); // Adjust the path as necessary
+const { Order } = require('./Order.models'); 
+const {cluster}= require('./cluster.models');// Adjust the path as necessary
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -82,4 +83,36 @@ app.update('/api/orderDetails/:id', (req, res) => {
             console.error("Error updating order:", err);
             res.status(500).json({ error: 'Failed to update order', details: err });
         });
+});
+
+app.get('/api/feedback/:id', async (req, res) => {
+    const cluster_id = req.params.id;
+    console.log("Received request for feedback details");
+
+    try {
+        const clusterData = await cluster.findOne({ cluster_id: cluster_id });
+        if (!clusterData) {
+            return res.status(404).json({ message: "Cluster not found" });
+        }
+        artisans=clusterData.artisans;
+        res.json(artisans);
+    } catch (error) {
+        console.error("Error fetching cluster:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
+app.get('/api/artisan/:id', async (req, res) => {
+    const cluster_id = req.params.id;
+    console.log("Received request for feedback details");
+
+    try {
+        const clusterData = await cluster.findOne({ cluster_id: cluster_id });
+        if (!clusterData) {
+            return res.status(404).json({ message: "Cluster not found" });
+        }
+        res.json(clusterData.artisans);
+    } catch (error) {
+        console.error("Error fetching cluster:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
 });
