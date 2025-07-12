@@ -13,6 +13,7 @@ function App() {
       <h3>Product Approval</h3>
       <Barcode onApprove={handleApprove} onReject={handleReject} />
       <ToastContainer position="top-right" autoClose={2000} />
+      <TrackOrder />
     </div>
   );
 }
