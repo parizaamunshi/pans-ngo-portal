@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const orderSchema = new mongoose.Schema({
+    
     orderQuantity: {
         type: Number,
         required: true
@@ -15,7 +16,8 @@ const orderSchema = new mongoose.Schema({
     },
     customerName: {
         type: String,
-        required: true
+        required: true,
+        default : "John Doe"
     },
     deliveryAddress: {
         type: String,
@@ -23,11 +25,13 @@ const orderSchema = new mongoose.Schema({
     },
     estimatedDeliveryDate: {
         type: Date,
-        required: true
+        required: true,
+        default: Date.now
     },
     specifications: {
         type: String,
-        required: true
+        required: true,
+        default : null
     },
     assignedTo: [{
         type: String,
@@ -37,6 +41,11 @@ const orderSchema = new mongoose.Schema({
         type: String,
         enum: ['Pending', 'In Progress', 'Completed', 'Cancelled'],
         default: 'Pending'
+    },
+    productCost : {
+        type: Number,
+        required: true,
+        
     }
 });
 
