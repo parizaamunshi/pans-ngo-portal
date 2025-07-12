@@ -12,7 +12,8 @@
   "dependencies": {
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-qr-barcode-scanner": "^2.1.8",
+    "react-router-dom": "^7.6.3",
+     "react-qr-barcode-scanner": "^2.1.8",
     "react-toastify": "^11.0.5"
   },
   "devDependencies": {
