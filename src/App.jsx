@@ -1,11 +1,22 @@
 import React, { useState } from 'react';
-
-function Login({ onLogin }) {
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import Admin from './components/Admin';
+import Leader from './components/Leader';
+function Login() {
   const [role, setRole] = useState('admin');
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
+    console.log("event", e);
+    
     e.preventDefault();
-    if (onLogin) onLogin(role);
+    
+    // Navigate based on role
+    if (role === 'admin') {
+      navigate('/admin');
+    } else if (role === 'leader') {
+      navigate('/leader');
+    }
   };
 
   return (
@@ -63,4 +74,37 @@ function Login({ onLogin }) {
   );
 }
 
-export default Login;
+// Admin Dashboard Component
+function AdminDashboard() {
+  return (
+    <div>
+      <AddProducts />
+    </div>
+  );
+}
+
+// Leader Dashboard Component
+function LeaderDashboard() {
+  return (
+    <div style={{ padding: '2rem', textAlign: 'center' }}>
+      <h1>Leader Dashboard</h1>
+      <p>Welcome to the Leader Dashboard!</p>
+      {/* Add leader-specific components here */}
+    </div>
+  );
+}
+
+// Main App Component with Routing
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/leader" element={<Leader />} />
+      </Routes>
+    </Router>
+  );
+}
+
+export default App;

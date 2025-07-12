@@ -102,6 +102,7 @@ function Admin() {
           gap: '2rem',
           maxWidth: '800px',
           margin: '0 auto',
+          color:"black"
         }}>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <label htmlFor="OrderQuantity">Order Quantity</label>
