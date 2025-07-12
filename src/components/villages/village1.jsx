@@ -95,8 +95,15 @@
 
 import React, { useState } from 'react';
 import './Village1.css';
+import axios from 'axios';
+
+
+
 
 const Village1 = () => {
+  axios.get('http://localhost:3000/feedback/1').then((response) => {
+    console.log(response);
+  })
   const artisanList = [
     { name: "Artisan 1", rating: 4.2 },
     { name: "Artisan 2", rating: 3.8 },

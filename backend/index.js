@@ -3,7 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const { Order } = require('./Order.models'); 
-const {cluster}= require('./cluster.models');// Adjust the path as necessary
+const cluster= require('./cluster.models');// Adjust the path as necessary
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -44,7 +44,6 @@ app.post('/api/orderDetails', (req, res) => {
         console.log("Received order data:", req.body);
         
         const newOrder = new Order({
-
             orderQuantity,
             orderDate,
             typeOfProduct,
@@ -68,7 +67,7 @@ app.post('/api/orderDetails', (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }})
 
-app.update('/api/orderDetails/:id', (req, res) => {
+app.put('/api/orderDetails/:id', (req, res) => {
     const orderId = req.params.id;
     const updateData = req.body;
     console.log(`Updating order with ID: ${orderId}`, updateData);
@@ -85,10 +84,10 @@ app.update('/api/orderDetails/:id', (req, res) => {
         });
 });
 
-app.get('/api/feedback/:id', async (req, res) => {
+app.get('/feedback/:id', async (req, res) => {
     const cluster_id = req.params.id;
-    console.log("Received request for feedback details");
-
+    console.log("Received request for feedback details", cluster_id);
+    console.log(cluster_id)
     try {
         const clusterData = await cluster.findOne({ cluster_id: cluster_id });
         if (!clusterData) {
@@ -96,6 +95,7 @@ app.get('/api/feedback/:id', async (req, res) => {
         }
         artisans=clusterData.artisans;
         res.json(artisans);
+        console.log(artisans);
     } catch (error) {
         console.error("Error fetching cluster:", error);
         res.status(500).json({ message: "Internal server error" });
@@ -104,7 +104,7 @@ app.get('/api/feedback/:id', async (req, res) => {
 app.get('/api/artisan/:id', async (req, res) => {
     const cluster_id = req.params.id;
     console.log("Received request for feedback details");
-
+    console.log(cluster_id)
     try {
         const clusterData = await cluster.findOne({ cluster_id: cluster_id });
         if (!clusterData) {
@@ -116,3 +116,4 @@ app.get('/api/artisan/:id', async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 });
+

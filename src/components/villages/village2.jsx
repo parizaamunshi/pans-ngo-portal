@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import './Village1.css';
+import axios from 'axios';
 
-const Village1 = () => {
+const Village2 = () => {
+  axios.get('http://localhost:3000/feedback/2').then((response) => {
+    console.log(response);
+  })
   const artisanList = [
     { name: "Artisan 1", rating: 4.2 },
     { name: "Artisan 2", rating: 3.8 },
@@ -46,5 +50,5 @@ const Village1 = () => {
   );
 };
 
-export default Village1;
+export default Village2;
 

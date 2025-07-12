@@ -67,7 +67,7 @@ const clusterSchema = new mongoose.Schema({
     },
     order_id:{
         type: Number,
-        default:None
+        default:null
     }
     ,
     artisans:[artisanSchema]

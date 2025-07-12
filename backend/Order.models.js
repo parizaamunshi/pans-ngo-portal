@@ -45,7 +45,6 @@ const orderSchema = new mongoose.Schema({
     productCost : {
         type: Number,
         required: true,
-        
     }
 });
 
