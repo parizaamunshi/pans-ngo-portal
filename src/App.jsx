@@ -1,66 +1,35 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Feedback from "./components/feedback";
-import Village1 from "./components/villages/village1";
-import Village2 from "./components/villages/village2";
-import Village3 from "./components/villages/village3";
-import Village4 from "./components/villages/village4";
-import Village5 from "./components/villages/village5";
-import Barcode from "./components/Barcode";
-import HomeLeader from "./components/home_leader";
-import TrackOrder from "./components/TrackOrder";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { Toaster } from "../src/components/ui/toaster";
+import { Toaster as Sonner } from "../src/components/ui/sonner";
+import { TooltipProvider } from "../src/components/ui/tooltip";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { DashboardLayout } from "./components/AdminDash";
+import Dashboard from "./components/AdminDash/DashboardLayout";
+import Orders from "./components/AdminDash/Orders";
+import Leaderboard from "./components/AdminDash/Leaderboard";
+import Settings from "./components/AdminDash/Settings";
 
-function App() {
-  const handleApprove = (data) => {
-    // handle approve logic
-  };
+const queryClient = new QueryClient();
 
-  const handleReject = (data) => {
-    // handle reject logic
-  };
-
-  return (
-    <Router>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <div>
-              <HomeLeader />
-              <div style={{ marginTop: "4rem" }}>
-                <h2 style={{ textAlign: "center" }}>Feedback</h2>
-                <Feedback />
-              </div>
-              <div style={{ marginTop: "4rem" }}>
-                <h2 style={{ textAlign: "center" }}>Order Timeline</h2>
-                <TrackOrder />
-              </div>
-            </div>
-          }
-        />
-        <Route path="/feedback" element={<Feedback />} />
-        <Route path="/village1" element={<Village1 />} />
-        <Route path="/village2" element={<Village2 />} />
-        <Route path="/village3" element={<Village3 />} />
-        <Route path="/village4" element={<Village4 />} />
-        <Route path="/village5" element={<Village5 />} />
-        <Route
-          path="/barcode"
-          element={
-            <>
-              <h3 style={{ textAlign: "center", marginTop: "20px" }}>
-                Product Approval
-              </h3>
-              <Barcode onApprove={handleApprove} onReject={handleReject} />
-              <ToastContainer position="top-right" autoClose={2000} />
-            </>
-          }
-        />
-      </Routes>
-    </Router>
-  );
-}
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <TooltipProvider>
+      <Toaster />
+      <Sonner />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<DashboardLayout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="orders" element={<Orders />} />
+            <Route path="leaderboard" element={<Leaderboard />} />
+            <Route path="settings" element={<Settings />} />
+          </Route>
+          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
+    </TooltipProvider>
+  </QueryClientProvider>
+);
 
 export default App;
