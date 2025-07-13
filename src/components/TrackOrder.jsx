@@ -1,11 +1,35 @@
 import { useNavigate } from "react-router-dom";
+import axios from 'axios';
 
 //dummy data
-const totalItems = 100;
-const scannedItems = 45;
-const progressPercentage = ((scannedItems / totalItems) * 100).toFixed(1);
+let totalItems = 100;
+let scannedItems = 45;
+let progressPercentage = ((scannedItems / totalItems) * 100).toFixed(1);
 
-const Timeline = () => {
+const Timeline = ({orderId}) => {
+    axios.get('/trackorder/:orderId', async (req, res) => {
+    const orderId = parseInt(req.params.orderId); // Convert from string to number
+
+    try {
+        const order = await Order.findOne({ order_id: orderId });
+
+        if (!order) {
+        return res.status(404).json({ message: 'Order not found' });
+        }
+
+        const cluster = await Cluster.findOne({ cluster_id: order.assigned_cluster_id });
+
+        if (!cluster) {
+        return res.status(404).json({ message: 'Cluster not found for this order' });
+        }
+
+        res.json(cluster);
+    } catch (err) {
+        console.error('Error fetching cluster by order:', err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+    });
+
     const navigate = useNavigate();
 
     return (
