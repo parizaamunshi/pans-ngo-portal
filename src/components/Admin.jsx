@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import axios from 'axios';
 // Example data for leaders and artisans
 const initialLeaders = [
   {
@@ -63,14 +63,41 @@ function Admin() {
   });
   const [leadersOpen, setLeadersOpen] = useState(false);
   const [artisansOpen, setArtisansOpen] = useState({});
+  const [priority, setPriority] = useState([]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
-
-  const handleSubmit = (e) => {
+   
+   const handleSubmit = async (e) => {
     e.preventDefault();
     setOrders([...orders, form]);
+    await axios.get('http://localhost:3000/api/clusters').then(response => {
+      const clusters = response.data;
+    
+      setPriority(
+        clusters.sort((a, b) => b.cluster_rating - a.cluster_rating)
+      );
+      console.log("Clusters fetched successfully:", priority);
+    }).catch(error => {
+      console.error("Error fetching clusters:", error);
+    });
+    await axios.post('http://localhost:3000/api/orderDetails', {
+      orderQuantity: form.OrderQuantity,
+      orderDate: form.orderDate,
+      typeOfProduct: form.TypeofProd,
+      customerName: form.customerName,
+      deliveryAddress: form.deliverAddress,
+      estimatedDeliveryDate: form.estimatedDeliveryDate,
+      specifications: form.Specifications,
+      assignedTo : priority.length > 0 ? priority[0].cluster_id : null,
+      status: form.status,
+      productCost: form.productcost
+    }).then(respone => {
+      console.log("Order added successfully:", respone.data);
+    }).catch(error => {
+      console.error("Error adding order:", error);
+    });
     setForm({
       OrderQuantity: '', orderDate: '', TypeofProd: '', customerName: '', deliverAddress: '', estimatedDeliveryDate: '', Specifications: '', status: '', productcost: '',
     });
@@ -110,7 +137,7 @@ function Admin() {
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <label htmlFor="orderDate">Order Date</label>
-            <input id="orderDate" name="orderDate" value={form.orderDate} onChange={handleChange} required style={{ margin: 4 }} />
+            <input id="orderDate"  name="orderDate" value={form.orderDate} onChange={handleChange} required style={{ margin: 4 }} />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <label htmlFor="TypeofProd">Type of Product</label>
@@ -126,7 +153,7 @@ function Admin() {
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <label htmlFor="estimatedDeliveryDate">Estimated Delivery Date</label>
-            <input id="estimatedDeliveryDate" name="estimatedDeliveryDate" value={form.estimatedDeliveryDate} onChange={handleChange} required style={{ margin: 4 }} />
+            <input id="estimatedDeliveryDate"  name="estimatedDeliveryDate" value={form.estimatedDeliveryDate} onChange={handleChange} required style={{ margin: 4 }} />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <label htmlFor="Specifications">Specifications</label>

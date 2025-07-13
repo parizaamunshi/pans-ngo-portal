@@ -28,7 +28,7 @@ app.get('/api/orderDetails', (req, res) => {
     try {
         console.log("Received request for order details");
         Order.find({})
-            .then(orders => res.json(orders))
+            .then(orders => res.status(200).json(orders))
             .catch(err => res.status(500).json({ error: 'Failed to fetch orders', details: err }));
     } catch (error) {
         console.error("Error in /api/orderDetails:", error);
@@ -64,6 +64,7 @@ app.post('/api/orderDetails', (req, res) => {
                 res.status(500).json({ error: 'Failed to save order', details: err });
             });
     } catch (error) {
+        console.log(error);
         res.status(500).json({ error: 'Internal Server Error' });
     }})
 
@@ -101,6 +102,15 @@ app.get('/feedback/:id', async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 });
+app.get('/api/clusters', async (req, res) => {
+    try {
+        const clusters = await cluster.find({});
+        res.json(clusters);
+    } catch (error) {
+        console.error("Error fetching clusters:", error);
+        res.status(500).json({ message: "Internal server error" , details: error });
+    }
+})
 app.get('/api/artisan/:id', async (req, res) => {
     const cluster_id = req.params.id;
     console.log("Received request for feedback details");
