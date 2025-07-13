@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import Admin from './components/Admin';
 import Leader from './components/Leader';
+import Barcode from './components/Barcode';
+import TrackOrder from './components/TrackOrder';
+import Feedback from './components/Feedback';
+import OrderDetails from './components/OrderDetails';
 function Login() {
   const [role, setRole] = useState('admin');
   const navigate = useNavigate();
@@ -102,6 +106,10 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/leader" element={<Leader />} />
+        <Route path="/barcode" element={<Barcode />} />
+        <Route path="/trackorder" element={<TrackOrder />} />
+        <Route path="/feedback" element={<Feedback />} />
+        <Route path="/orderdetails" element={<OrderDetails />} />
       </Routes>
     </Router>
   );

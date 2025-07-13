@@ -2,7 +2,9 @@
 
 
 
+
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import OrderDetails from './OrderDetails';
 import ArtisanDetails from './ArtisanDetails';
@@ -10,6 +12,7 @@ import AllArtisans from './AllArtisans';
 
 
 function Leader() {
+  const navigate = useNavigate();
   // Example order data with new fields
   const order1 = {
     OrderQuantity: 10,
@@ -152,9 +155,25 @@ function Leader() {
         >
           View Orders
         </span>
-        <span style={{ color: 'white', cursor: 'pointer', letterSpacing: 1 }}>Update Status</span>
-        <span style={{ color: 'white', cursor: 'pointer', letterSpacing: 1 }}>Track Orders</span>
-        <span style={{ color: 'white', cursor: 'pointer', letterSpacing: 1 }}>View Feedback</span>
+        <span
+          style={{ color: 'white', cursor: 'pointer', letterSpacing: 1 }}
+          onClick={() => navigate('/barcode')}
+        >
+          Update Status
+        </span>
+        <span
+          style={{ color: 'white', cursor: 'pointer', letterSpacing: 1 }}
+          onClick={() => navigate('/trackorder')}
+        >
+          Track Orders
+        </span>
+        <span
+          style={{ color: 'white', cursor: 'pointer', letterSpacing: 1 }}
+          onClick={() => navigate('/feedback')}
+          
+        >
+          View Feedback
+        </span>
       </nav>
       <div style={{ background: 'linear-gradient(90deg, #388e3c 0%, #1976d2 100%)', color: 'white', borderRadius: 10, padding: '2.5rem', marginBottom: '2.5rem', boxShadow: '0 2px 8px #0001', maxWidth: '1200px', marginLeft: 'auto', marginRight: 'auto' }}>
         <h2 style={{ margin: 0 }}>Total Products Received: <span style={{ color: '#fbc02d' }}>{totalProducts}</span></h2>
@@ -167,12 +186,12 @@ function Leader() {
           <button onClick={handleShowAll} style={{ padding: '0.5rem 1.2rem', fontSize: '1rem', background: '#388e3c', color: 'white', border: 'none', borderRadius: 6, cursor: 'pointer', fontWeight: 500 }}>
             {showAll ? 'Hide All Products' : 'Show All Products'}
           </button>
-          {/* Artisan Details Button - currently links to empty page */}
-          <a href="" style={{ textDecoration: 'none' }}>
-            <button style={{ padding: '0.5rem 1.2rem', fontSize: '1rem', background: '#fbc02d', color: '#333', border: 'none', borderRadius: 6, fontWeight: 500, cursor: 'pointer' }}>
-              Artisan Details
-            </button>
-          </a>
+          <button
+            style={{ padding: '0.5rem 1.2rem', fontSize: '1rem', background: '#fbc02d', color: '#333', border: 'none', borderRadius: 6, fontWeight: 500, cursor: 'pointer' }}
+            onClick={() => navigate('/orderdetails')}
+          >
+            Order Details
+          </button>
         </div>
         {dropdownOpen && (
           <ul style={{ listStyle: 'none', padding: 0, margin: '1rem 0', border: '1px solid #ccc', borderRadius: 6, background: '#f7fafd', maxWidth: 400, marginLeft: 'auto', marginRight: 'auto', boxShadow: '0 1px 4px #1976d233' }}>
