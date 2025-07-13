@@ -14,13 +14,7 @@ import Village2 from './components/villages/village2';
 import Village3 from './components/villages/village3';
 import Village4 from './components/villages/village4'; 
 import Village5 from './components/villages/village5';
-
-
-
-
-
-
-
+import PhotoGeoLocator from './components/geolocator';
 
 function Login() {
   const [role, setRole] = useState('admin');
@@ -165,8 +159,7 @@ function App() {
           }
         />
         <Route path="/admin/addleader" element={<Addleader />} />
-
-
+        <Route path="/geolocator" element={<PhotoGeoLocator />} />
       </Routes>
     </Router>
   );

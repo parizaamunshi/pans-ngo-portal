@@ -1,0 +1,95 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f8fafc;
+  color: #1e293b;
+}
+
+/* Layout */
+.geo-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.geo-header {
+  background-color: #505359;
+  color: white;
+  padding: 1rem 2rem;
+  text-align: center;
+}
+
+.geo-main {
+  flex: 1;
+  padding: 2rem 1rem;
+}
+
+/* Container */
+.geo-container-formal {
+  max-width: 720px;
+  margin: 0 auto;
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+/* Title + Subtitle */
+.geo-title-formal {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.geo-subtitle-formal {
+  color: #64748b;
+  margin-bottom: 1.5rem;
+}
+
+/* Drop area */
+.geo-drop-box-formal {
+  background-color: #f1f5f9;
+  color: #1e40af;
+  font-weight: bold;
+  padding: 2rem;
+  border: 2px dashed #cbd5e1;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+.geo-drop-box-formal:hover {
+  background-color: #e2e8f0;
+  border-color: #94a3b8;
+}
+
+/* Cards */
+.geo-card-formal {
+  background-color: #f9fafb;
+  padding: 1.2rem 1.5rem;
+  margin-top: 1.5rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  color: #474d57;
+}
+.geo-card-formal h3 {
+  margin-bottom: 0.5rem;
+}
+
+/* Footer */
+.geo-footer {
+  background-color: #6d6e72;
+  color: #cbd5e1;
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.9rem;
+}
+
+/* Link */
+.geo-link-formal {
+  color: #2563eb;
+  font-weight: 500;
+  text-decoration: none;
+}
+.geo-link-formal:hover {
+  text-decoration: underline;
+}
