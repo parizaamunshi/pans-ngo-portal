@@ -127,3 +127,206 @@ app.get('/api/artisan/:id', async (req, res) => {
     }
 });
 
+app.put('/api/artisan/:clusterId/:artisanId', async (req, res) => {
+    try {
+        const { clusterId, artisanId } = req.params;
+        
+        const clusterData = await cluster.findOne({ cluster_id: clusterId });
+        if (!clusterData) {
+            return res.status(404).json({ message: "Cluster not found" });
+        }
+        
+        const artisan = clusterData.artisans.id(artisanId);
+        if (!artisan) {
+            return res.status(404).json({ message: "Artisan not found" });
+        }
+        
+        artisan.amountToBePaid = 0;
+        
+        await clusterData.save();
+        
+        res.json({ message: "Amount to be paid updated to 0", artisan });
+    } catch (error) {
+        console.error("Error updating artisan amount:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
+
+// Payment processing endpoint
+app.post('/api/clusters/:clusterId/pay', async (req, res) => {
+    try {
+        const { clusterId } = req.params;
+        
+        const clusterData = await cluster.findOne({ cluster_id: clusterId });
+        if (!clusterData) {
+            return res.status(404).json({ message: "Cluster not found" });
+        }
+        
+        // Simulate payment processing delay
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // Update all artisans' payment status to 0 (indicating payment completed)
+        clusterData.artisans.forEach(artisan => {
+            artisan.amount_to_be_paid = 0;
+        });
+        
+        await clusterData.save();
+        
+        res.json({ 
+            message: "Payment processed successfully", 
+            cluster_id: clusterId,
+            total_artisans: clusterData.artisans.length 
+        });
+    } catch (error) {
+        console.error("Error processing payment:", error);
+        res.status(500).json({ message: "Internal server error", details: error });
+    }
+});
+
+// Populate sample payment data for testing
+app.post('/api/populate-sample-data', async (req, res) => {
+    try {
+        // Create sample clusters with artisans and payment amounts
+        const sampleClusters = [
+            {
+                cluster_id: 1,
+                leader_id: 101,
+                cluster_rating: 4.5,
+                leader_rating: 4.8,
+                order_id: null,
+                artisans: [
+                    {
+                        artisan_id: 1001,
+                        artisan_name: "Rajesh Kumar",
+                        artisan_rating: 4.3,
+                        total_orders: 25,
+                        total_revenue: 125000,
+                        current_order: 2,
+                        amount_to_be_paid: 8500,
+                        skills: ["Pottery", "Ceramic Work"],
+                        years_of_experience: 8
+                    },
+                    {
+                        artisan_id: 1002,
+                        artisan_name: "Priya Sharma",
+                        artisan_rating: 4.7,
+                        total_orders: 32,
+                        total_revenue: 156000,
+                        current_order: 1,
+                        amount_to_be_paid: 12000,
+                        skills: ["Textiles", "Embroidery"],
+                        years_of_experience: 12
+                    },
+                    {
+                        artisan_id: 1003,
+                        artisan_name: "Amit Singh",
+                        artisan_rating: 4.1,
+                        total_orders: 18,
+                        total_revenue: 89000,
+                        current_order: 3,
+                        amount_to_be_paid: 6750,
+                        skills: ["Wood Carving", "Furniture"],
+                        years_of_experience: 6
+                    }
+                ]
+            },
+            {
+                cluster_id: 2,
+                leader_id: 102,
+                cluster_rating: 4.2,
+                leader_rating: 4.4,
+                order_id: null,
+                artisans: [
+                    {
+                        artisan_id: 2001,
+                        artisan_name: "Sunita Devi",
+                        artisan_rating: 4.6,
+                        total_orders: 28,
+                        total_revenue: 142000,
+                        current_order: 2,
+                        amount_to_be_paid: 9200,
+                        skills: ["Jewelry", "Metalwork"],
+                        years_of_experience: 10
+                    },
+                    {
+                        artisan_id: 2002,
+                        artisan_name: "Vikram Patel",
+                        artisan_rating: 4.0,
+                        total_orders: 22,
+                        total_revenue: 108000,
+                        current_order: 1,
+                        amount_to_be_paid: 7800,
+                        skills: ["Leather Work", "Bags"],
+                        years_of_experience: 7
+                    }
+                ]
+            },
+            {
+                cluster_id: 3,
+                leader_id: 103,
+                cluster_rating: 4.8,
+                leader_rating: 4.9,
+                order_id: null,
+                artisans: [
+                    {
+                        artisan_id: 3001,
+                        artisan_name: "Meera Joshi",
+                        artisan_rating: 4.8,
+                        total_orders: 35,
+                        total_revenue: 175000,
+                        current_order: 2,
+                        amount_to_be_paid: 15000,
+                        skills: ["Painting", "Canvas Art"],
+                        years_of_experience: 15
+                    },
+                    {
+                        artisan_id: 3002,
+                        artisan_name: "Ramesh Gupta",
+                        artisan_rating: 4.5,
+                        total_orders: 30,
+                        total_revenue: 148000,
+                        current_order: 3,
+                        amount_to_be_paid: 11500,
+                        skills: ["Stone Carving", "Sculptures"],
+                        years_of_experience: 13
+                    },
+                    {
+                        artisan_id: 3003,
+                        artisan_name: "Kavya Reddy",
+                        artisan_rating: 4.4,
+                        total_orders: 26,
+                        total_revenue: 128000,
+                        current_order: 1,
+                        amount_to_be_paid: 8900,
+                        skills: ["Handloom", "Sarees"],
+                        years_of_experience: 9
+                    },
+                    {
+                        artisan_id: 3004,
+                        artisan_name: "Deepak Yadav",
+                        artisan_rating: 4.2,
+                        total_orders: 20,
+                        total_revenue: 98000,
+                        current_order: 2,
+                        amount_to_be_paid: 7200,
+                        skills: ["Bamboo Craft", "Home Decor"],
+                        years_of_experience: 5
+                    }
+                ]
+            }
+        ];
+
+        // Clear existing data and insert sample data
+        await cluster.deleteMany({});
+        await cluster.insertMany(sampleClusters);
+
+        res.json({ 
+            message: "Sample data populated successfully",
+            clusters_created: sampleClusters.length,
+            total_artisans: sampleClusters.reduce((sum, c) => sum + c.artisans.length, 0)
+        });
+    } catch (error) {
+        console.error("Error populating sample data:", error);
+        res.status(500).json({ message: "Internal server error", details: error });
+    }
+});
