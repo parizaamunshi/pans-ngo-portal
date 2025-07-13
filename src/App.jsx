@@ -27,11 +27,7 @@ function Login() {
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
-    console.log("event", e);
-    
     e.preventDefault();
-    
-    // Navigate based on role
     if (role === 'admin') {
       navigate('/admin');
     } else if (role === 'leader') {
@@ -43,51 +39,55 @@ function Login() {
     <div style={{
       minHeight: '100vh',
       width: '100vw',
-      background: 'linear-gradient(90deg, #1976d2 0%, #42a5f5 100%)',
+      background: 'linear-gradient(120deg, #1976d2 0%, #42a5f5 100%)',
       display: 'flex',
-      flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
       margin: 0,
       padding: 0,
     }}>
       <div style={{
-        width: '100vw',
-        maxWidth: '100vw',
+        width: 400,
         background: 'white',
-        borderRadius: 0,
-        boxShadow: 'none',
-        padding: '3rem 0',
+        borderRadius: 18,
+        boxShadow: '0 6px 32px #1976d233',
+        padding: '2.5rem 2.5rem 2rem 2.5rem',
         textAlign: 'center',
         margin: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
       }}>
-        <h2 style={{ color: '#1976d2', marginBottom: '2rem', fontSize: '2.2rem' }}>Login</h2>
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2rem' }}>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '3rem' }}>
-            <label style={{ fontSize: '1.3rem', color: '#333' }}>
+        <div style={{ marginBottom: '2rem', width: '100%' }}>
+          <h2 style={{ color: '#1976d2', fontWeight: 700, fontSize: '2.3rem', margin: 0, letterSpacing: 1 }}>Welcome</h2>
+          <p style={{ color: '#555', fontSize: '1.1rem', margin: '0.5rem 0 0 0' }}>Sign in to your account</p>
+        </div>
+        <form onSubmit={handleSubmit} style={{ width: '100%' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '2rem', marginBottom: '2.5rem' }}>
+            <label style={{ fontSize: '1.15rem', color: '#1976d2', fontWeight: 500, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, border: role === 'admin' ? '2px solid #1976d2' : '2px solid #e3e3e3', borderRadius: 8, padding: '0.5rem 1.2rem', background: role === 'admin' ? '#e3f2fd' : '#f7fafd', transition: 'all 0.2s' }}>
               <input
                 type="radio"
                 name="role"
                 value="admin"
                 checked={role === 'admin'}
                 onChange={() => setRole('admin')}
-                style={{ marginRight: 10 }}
+                style={{ marginRight: 8 }}
               />
               Admin
             </label>
-            <label style={{ fontSize: '1.3rem', color: '#333' }}>
+            <label style={{ fontSize: '1.15rem', color: '#1976d2', fontWeight: 500, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, border: role === 'leader' ? '2px solid #1976d2' : '2px solid #e3e3e3', borderRadius: 8, padding: '0.5rem 1.2rem', background: role === 'leader' ? '#e3f2fd' : '#f7fafd', transition: 'all 0.2s' }}>
               <input
                 type="radio"
                 name="role"
                 value="leader"
                 checked={role === 'leader'}
                 onChange={() => setRole('leader')}
-                style={{ marginRight: 10 }}
+                style={{ marginRight: 8 }}
               />
               Leader
             </label>
           </div>
-          <button type="submit" style={{ padding: '1rem 4rem', fontSize: '1.3rem', background: '#1976d2', color: 'white', border: 'none', borderRadius: 8, fontWeight: 600, boxShadow: '0 1px 4px #1976d233', cursor: 'pointer', letterSpacing: 1 }}>Login</button>
+          <button type="submit" style={{ width: '100%', padding: '1rem 0', fontSize: '1.2rem', background: 'linear-gradient(90deg, #1976d2 0%, #42a5f5 100%)', color: 'white', border: 'none', borderRadius: 8, fontWeight: 700, boxShadow: '0 2px 8px #1976d233', cursor: 'pointer', letterSpacing: 1, marginBottom: '0.5rem', transition: 'background 0.2s' }}>Login</button>
         </form>
       </div>
     </div>

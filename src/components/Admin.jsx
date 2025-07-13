@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 import Payment from './Payment';
 // Example data for leaders and artisans
@@ -134,39 +135,39 @@ function Admin() {
         }}>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <label htmlFor="OrderQuantity">Order Quantity</label>
-            <input id="OrderQuantity" name="OrderQuantity" value={form.OrderQuantity} onChange={handleChange} required style={{ margin: 4 }} />
+            <input id="OrderQuantity" name="OrderQuantity" type="number" min="1" value={form.OrderQuantity} onChange={handleChange} required style={{ margin: 4 }} />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <label htmlFor="orderDate">Order Date</label>
-            <input id="orderDate"  name="orderDate" value={form.orderDate} onChange={handleChange} required style={{ margin: 4 }} />
+            <input id="orderDate"  name="orderDate" type="date" value={form.orderDate} onChange={handleChange} required style={{ margin: 4 }} />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <label htmlFor="TypeofProd">Type of Product</label>
-            <input id="TypeofProd" name="TypeofProd" value={form.TypeofProd} onChange={handleChange} required style={{ margin: 4 }} />
+            <input id="TypeofProd" name="TypeofProd" type="text" value={form.TypeofProd} onChange={handleChange} required style={{ margin: 4 }} />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <label htmlFor="customerName">Customer Name</label>
-            <input id="customerName" name="customerName" value={form.customerName} onChange={handleChange} required style={{ margin: 4 }} />
+            <input id="customerName" name="customerName" type="text" value={form.customerName} onChange={handleChange} required style={{ margin: 4 }} />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <label htmlFor="deliverAddress">Delivery Address</label>
-            <input id="deliverAddress" name="deliverAddress" value={form.deliverAddress} onChange={handleChange} required style={{ margin: 4 }} />
+            <input id="deliverAddress" name="deliverAddress" type="text" value={form.deliverAddress} onChange={handleChange} required style={{ margin: 4 }} />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <label htmlFor="estimatedDeliveryDate">Estimated Delivery Date</label>
-            <input id="estimatedDeliveryDate"  name="estimatedDeliveryDate" value={form.estimatedDeliveryDate} onChange={handleChange} required style={{ margin: 4 }} />
+            <input id="estimatedDeliveryDate"  name="estimatedDeliveryDate" type="date" value={form.estimatedDeliveryDate} onChange={handleChange} required style={{ margin: 4 }} />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <label htmlFor="Specifications">Specifications</label>
-            <input id="Specifications" name="Specifications" value={form.Specifications} onChange={handleChange} required style={{ margin: 4 }} />
+            <input id="Specifications" name="Specifications" type="text" value={form.Specifications} onChange={handleChange} required style={{ margin: 4 }} />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <label htmlFor="status">Status</label>
-            <input id="status" name="status" value={form.status} onChange={handleChange} required style={{ margin: 4 }} />
+            <input id="status" name="status" type="text" value={form.status} onChange={handleChange} required style={{ margin: 4 }} />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <label htmlFor="productcost">Product Cost</label>
-            <input id="productcost" name="productcost" value={form.productcost} onChange={handleChange} required style={{ margin: 4 }} />
+            <input id="productcost" name="productcost" type="number" min="0" step="0.01" value={form.productcost} onChange={handleChange} required style={{ margin: 4 }} />
           </div>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '1rem', gridColumn: '1 / -1' }}>
@@ -204,31 +205,44 @@ function Admin() {
         <button onClick={toggleLeaders} style={{ margin: '1rem', padding: '0.5rem 1.2rem', fontSize: '1rem', background: '#388e3c', color: 'white', border: 'none', borderRadius: 6, cursor: 'pointer', fontWeight: 500 }}>
           {leadersOpen ? 'Hide Leaders' : 'Show Leaders'}
         </button>
-        {leadersOpen && leaders.map((leader, idx) => (
-          <div key={idx} style={{ border: '1px solid #e3e3e3', borderRadius: 8, padding: '1rem', margin: '1rem 0', background: '#f7fafd', boxShadow: '0 1px 4px #388e3c22' }}>
-            <h4 style={{ color: '#388e3c', marginBottom: 0 }}>{leader.leader_name} (ID: {leader.leader_id})</h4>
-            <p style={{ marginTop: 4 }}><strong>Number of Artisans:</strong> {leader.artisans.length}</p>
-            <button onClick={() => toggleArtisans(idx)} style={{ margin: '0.5rem', padding: '0.3rem 1rem', fontSize: '1rem', background: '#fbc02d', color: '#333', border: 'none', borderRadius: 6, cursor: 'pointer', fontWeight: 500 }}>
-              {artisansOpen[idx] ? 'Hide Artisans' : 'Show Artisans'}
-            </button>
-            {artisansOpen[idx] && leader.artisans.map((artisan, aidx) => (
-              <ul key={aidx} style={{ textAlign: 'left', margin: '0 auto', maxWidth: 400, background: 'white', borderRadius: 6, boxShadow: '0 1px 4px #8881', padding: '1rem', marginTop: '1rem' }}>
-                <li><strong>Artisian ID:</strong> {artisan.artisian_id}</li>
-                <li><strong>Artisian Name:</strong> {artisan.artisian_name}</li>
-                <li><strong>Artisian Rating:</strong> {artisan.artisian_rating}</li>
-                <li><strong>Total Orders:</strong> {artisan.total_orders}</li>
-                <li><strong>Total Revenue:</strong> ₹{artisan.total_revenue}</li>
-                <li><strong>Current Order:</strong> {artisan.current_order}</li>
-                <li><strong>Amount to be Paid:</strong> ₹{artisan.amount_to_be_paid}</li>
-                <li><strong>Skills:</strong> {artisan.skills.join(', ')}</li>
-              </ul>
+        {leadersOpen && (
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+            gap: '1.5rem',
+            marginTop: '1.5rem',
+          }}>
+            {leaders.map((leader, idx) => (
+              <div key={idx} style={{ border: '1px solid #e3e3e3', borderRadius: 8, padding: '1.5rem', background: '#f7fafd', boxShadow: '0 1px 4px #388e3c22', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                <h4 style={{ color: '#388e3c', marginBottom: 0 }}>{leader.leader_name} (ID: {leader.leader_id})</h4>
+                <p style={{ marginTop: 4 }}><strong>Number of Artisans:</strong> {leader.artisans.length}</p>
+                <button onClick={() => toggleArtisans(idx)} style={{ margin: '0.5rem 0', padding: '0.3rem 1rem', fontSize: '1rem', background: '#fbc02d', color: '#333', border: 'none', borderRadius: 6, cursor: 'pointer', fontWeight: 500 }}>
+                  {artisansOpen[idx] ? 'Hide Artisans' : 'Show Artisans'}
+                </button>
+                {artisansOpen[idx] && leader.artisans.map((artisan, aidx) => (
+                  <ul key={aidx} style={{ textAlign: 'left', margin: '0.5rem 0 0 0', maxWidth: 400, background: 'white', borderRadius: 6, boxShadow: '0 1px 4px #8881', padding: '1rem' }}>
+                    <li><strong>Artisian ID:</strong> {artisan.artisian_id}</li>
+                    <li><strong>Artisian Name:</strong> {artisan.artisian_name}</li>
+                    <li><strong>Artisian Rating:</strong> {artisan.artisian_rating}</li>
+                    <li><strong>Total Orders:</strong> {artisan.total_orders}</li>
+                    <li><strong>Total Revenue:</strong> ₹{artisan.total_revenue}</li>
+                    <li><strong>Current Order:</strong> {artisan.current_order}</li>
+                    <li><strong>Amount to be Paid:</strong> ₹{artisan.amount_to_be_paid}</li>
+                    <li><strong>Skills:</strong> {artisan.skills.join(', ')}</li>
+                  </ul>
+                ))}
+              </div>
             ))}
           </div>
-        ))}
+        )}
       </div>
       <Payment />
     </div>
   );
 }
+
+
+// Placeholder for future props
+Admin.propTypes = {};
 
 export default Admin;
