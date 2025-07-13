@@ -12,9 +12,10 @@ import Timeline from './components/TrackOrder';
 import Village1 from './components/villages/village1';
 import Village2 from './components/villages/village2';
 import Village3 from './components/villages/village3';
-import Village4 from './components/villages/village4'; 
+import Village4 from './components/villages/village4';
 import Village5 from './components/villages/village5';
 
+import Dashboard from './components/Dashboard';
 
 
 
@@ -28,9 +29,9 @@ function Login() {
 
   const handleSubmit = (e) => {
     console.log("event", e);
-    
+
     e.preventDefault();
-    
+
     // Navigate based on role
     if (role === 'admin') {
       navigate('/admin');
@@ -122,6 +123,7 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/leader" element={<Leader />} />
+        <Route path="/dashboard" element={<Dashboard />} />
 
         <Route path="/barcode" element={<Barcode />} />
         <Route path="/trackorder" element={<TrackOrder />} />
@@ -159,7 +161,7 @@ function App() {
               <h3 style={{ textAlign: "center", marginTop: "20px" }}>
                 Product Approval
               </h3>
-              <Barcode   />
+              <Barcode />
               {/* <ToastContainer position="top-right" autoClose={2000} /> */}
             </>
           }
