@@ -51,9 +51,11 @@ function Leader() {
       // Filter orders assigned to this cluster
       const clusterOrders = response.data.filter(order => order.assignedTo === clusterId);
       setOrders(clusterOrders);
-      console.log("Orders Data:", clusterOrders);
+      console.log("All Orders Data:", response.data);
+      console.log("Filtered Orders for Cluster", clusterId, ":", clusterOrders);
     } catch (error) {
       console.error("Error fetching orders:", error);
+      setError("Failed to fetch orders");
     }
   };
 
@@ -290,12 +292,21 @@ function Leader() {
             {orders.length === 0 ? (
               <div style={{ textAlign: 'center', padding: '3rem', color: '#718096' }}>
                 <h3 style={{ color: '#4a5568' }}>No orders assigned to this cluster yet</h3>
-                <p>Orders will appear here once they are assigned to your cluster.</p>
+                <p>Orders will appear here once they are assigned to cluster ID: {clusterId}</p>
+                <p style={{ fontSize: '0.9rem', color: '#a0aec0' }}>
+                  Debug Info: Cluster ID = {clusterId}, Total orders in system will be checked for assignedTo = {clusterId}
+                </p>
               </div>
             ) : (
-              <div style={{ overflowX: 'auto' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
-                  <thead>
+              <div>
+                <div style={{ marginBottom: '1rem', padding: '1rem', background: '#f7fafc', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                  <p style={{ margin: 0, color: '#4a5568', fontSize: '0.9rem' }}>
+                    <strong>Found {orders.length} order(s) assigned to Cluster {clusterId}</strong>
+                  </p>
+                </div>
+                <div style={{ overflowX: 'auto' }}>
+                  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
+                    <thead>
                     <tr style={{ background: '#f7fafc', borderBottom: '2px solid #e2e8f0' }}>
                       <th style={{ padding: '1rem', textAlign: 'left', color: '#4a5568', fontWeight: '600' }}>Order ID</th>
                       <th style={{ padding: '1rem', textAlign: 'left', color: '#4a5568', fontWeight: '600' }}>Product</th>
@@ -308,29 +319,36 @@ function Leader() {
                   </thead>
                   <tbody>
                     {orders.map((order, idx) => (
-                      <tr key={order._id} style={{ borderBottom: '1px solid #e2e8f0' }}>
-                        <td style={{ padding: '1rem', color: '#2d3748' }}>{order._id?.slice(-8) || `ORD-${idx + 1}`}</td>
-                        <td style={{ padding: '1rem', color: '#2d3748' }}>{order.typeOfProduct}</td>
-                        <td style={{ padding: '1rem', color: '#2d3748' }}>{order.customerName}</td>
-                        <td style={{ padding: '1rem', color: '#2d3748' }}>{order.orderQuantity}</td>
+                      <tr key={order._id || idx} style={{ borderBottom: '1px solid #e2e8f0' }}>
+                        <td style={{ padding: '1rem', color: '#2d3748' }}>
+                          {order._id ? order._id.slice(-8) : `ORD-${idx + 1}`}
+                        </td>
+                        <td style={{ padding: '1rem', color: '#2d3748' }}>{order.typeOfProduct || 'N/A'}</td>
+                        <td style={{ padding: '1rem', color: '#2d3748' }}>{order.customerName || 'N/A'}</td>
+                        <td style={{ padding: '1rem', color: '#2d3748' }}>{order.orderQuantity || 'N/A'}</td>
                         <td style={{ padding: '1rem' }}>
                           <span style={{ 
-                            background: order.status === 'Pending' ? '#fef5e7' : order.status === 'In Progress' ? '#ebf8ff' : '#f0fff4',
-                            color: order.status === 'Pending' ? '#c05621' : order.status === 'In Progress' ? '#2b6cb0' : '#25855a',
+                            background: order.status === 'Pending' ? '#fef5e7' : order.status === 'In Progress' ? '#ebf8ff' : order.status === 'Completed' ? '#f0fff4' : '#f7fafc',
+                            color: order.status === 'Pending' ? '#c05621' : order.status === 'In Progress' ? '#2b6cb0' : order.status === 'Completed' ? '#25855a' : '#4a5568',
                             padding: '0.25rem 0.75rem', 
                             borderRadius: '6px', 
                             fontSize: '0.8rem', 
                             fontWeight: '600' 
                           }}>
-                            {order.status}
+                            {order.status || 'Unknown'}
                           </span>
                         </td>
-                        <td style={{ padding: '1rem', color: '#2d3748', fontWeight: '600' }}>₹{order.productCost?.toLocaleString()}</td>
-                        <td style={{ padding: '1rem', color: '#2d3748' }}>{new Date(order.estimatedDeliveryDate).toLocaleDateString()}</td>
+                        <td style={{ padding: '1rem', color: '#2d3748', fontWeight: '600' }}>
+                          ₹{order.productCost ? order.productCost.toLocaleString() : '0'}
+                        </td>
+                        <td style={{ padding: '1rem', color: '#2d3748' }}>
+                          {order.estimatedDeliveryDate ? new Date(order.estimatedDeliveryDate).toLocaleDateString() : 'N/A'}
+                        </td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
+                </div>
               </div>
             )}
           </div>

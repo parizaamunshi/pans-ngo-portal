@@ -101,9 +101,9 @@ const TrackOrder = () => {
         const progress = getProgressPercentage();
         
         switch (stepIndex) {
-            case 0: return 'completed'; // Order placed always completed
-            case 1: return orderData.assignedTo ? 'completed' : 'pending'; // Assigned to cluster
-            case 2: return progress > 15 ? 'active' : 'pending'; // In progress
+            case 0: return 'active'; // Order placed - active (blue)
+            case 1: return orderData.assignedTo ? 'active' : 'pending'; // Assigned to cluster - active (blue)
+            case 2: return 'completed'; // In progress - completed (green)
             case 3: return orderData.status === 'Completed' ? 'completed' : 'pending'; // Delivered
             default: return 'pending';
         }
