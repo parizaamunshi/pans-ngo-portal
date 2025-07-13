@@ -123,6 +123,19 @@ app.get('/api/clusters', async (req, res) => {
         res.status(500).json({ message: "Internal server error" , details: error });
     }
 })
+app.get('/api/clusters/:id', async (req, res) => {
+    const clusterId = req.params.id;
+    try {
+        const clusterData = await cluster.findOne({ cluster_id: clusterId });
+        if (!clusterData) {
+            return res.status(404).json({ message: "Cluster not found" });
+        }
+        res.status(200).json(clusterData);
+    } catch (error) {
+        console.error("Error fetching cluster:", error);
+        res.status(500).json({ message: "Internal server error" , details: error });
+    }
+});
 app.get('/api/artisan/:id', async (req, res) => {
     const cluster_id = req.params.id;
     console.log("Received request for feedback details");
