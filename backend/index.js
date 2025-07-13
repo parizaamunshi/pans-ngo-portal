@@ -7,10 +7,22 @@ const cluster= require('./cluster.models');// Adjust the path as necessary
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+app.use(express.urlencoded({ extended: true }));
 
 app.use(express.json());
 app.use(cors());
 
+const generateArtisan = (id) => ({
+  artisan_id: id,
+  artisan_name: `Artisan ${id}`,
+  artisan_rating: Math.floor(Math.random() * 2) + 4,
+  total_orders: Math.floor(Math.random() * 100),
+  total_revenue: Math.floor(Math.random() * 10000),
+  current_order: Math.floor(Math.random() * 3),
+  amount_to_be_paid: Math.floor(Math.random() * 1000),
+  skills: ['Pottery', 'Weaving', 'Woodwork'].sort(() => 0.5 - Math.random()).slice(0, 2),
+  years_of_experience: Math.floor(Math.random() * 15)
+});
 // Debug: Check if environment variables are loaded
 console.log('MONGODB_URL:', process.env.MONGODB_URL ? 'Loaded' : 'Not found');
 console.log('PORT:', process.env.PORT);
@@ -126,6 +138,7 @@ app.get('/api/artisan/:id', async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 });
+
 
 app.put('/api/artisan/:clusterId/:artisanId', async (req, res) => {
     try {
@@ -330,3 +343,28 @@ app.post('/api/populate-sample-data', async (req, res) => {
         res.status(500).json({ message: "Internal server error", details: error });
     }
 });
+app.post("/admin", async (req,res) => {
+    const {leader_id}=req.body
+    const artisans = [];
+      for (let j = 1; j <= 10; j++) {
+        artisans.push(generateArtisan(i * 100 + j));
+      }
+    const newCluster= new cluster({
+        cluster_id:leader_id,
+        leader_id:leader_id,
+        cluster_rating: +(Math.random() * 5).toFixed(1),
+        leader_rating: +(Math.random() * 5).toFixed(1),
+        order_id: null,
+        artisans
+    })
+    await newCluster.save();
+    res.json(newCluster);
+    console.log("New leader added");
+})
+app.delete("/admin",async (req,res)=>{
+    const {leader_id}=req.body;
+    await cluster.deleteOne({leader_id:leader_id});
+    res.json("Leader deleted");
+    console.log("Leader deleted");
+})
+
