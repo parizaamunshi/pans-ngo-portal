@@ -356,7 +356,7 @@ app.post('/api/populate-sample-data', async (req, res) => {
         res.status(500).json({ message: "Internal server error", details: error });
     }
 });
-app.post("/admin", async (req,res) => {
+app.post("/admin/addleader", async (req,res) => {
     const {leader_id}=req.body
     const artisans = [];
       for (let j = 1; j <= 10; j++) {
@@ -374,7 +374,7 @@ app.post("/admin", async (req,res) => {
     res.json(newCluster);
     console.log("New leader added");
 })
-app.delete("/admin",async (req,res)=>{
+app.delete("/admin/deleteleader",async (req,res)=>{
     const {leader_id}=req.body;
     await cluster.deleteOne({leader_id:leader_id});
     res.json("Leader deleted");
