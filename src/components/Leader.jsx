@@ -6,7 +6,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-
+import PhotoGeoLocator from './PhotoGeoLocator';
 import OrderDetails from './OrderDetails';
 import ArtisanDetails from './ArtisanDetails';
 import AllArtisans from './AllArtisans';
@@ -154,6 +154,14 @@ function Leader() {
             onClick={() => navigate('/feedback')}
           >
             View Feedback
+          </button>
+          <button
+            style={{ background: 'transparent', border: 'none', color: '#3182ce', cursor: 'pointer', fontSize: '1rem', fontWeight: '500', padding: '0.5rem 1rem', borderRadius: '6px', transition: 'background 0.2s' }}
+            onMouseEnter={(e) => e.target.style.background = '#ebf8ff'}
+            onMouseLeave={(e) => e.target.style.background = 'transparent'}
+            onClick={() => navigate('/photogeolocator')}
+          >
+             Photo Geo Locator
           </button>
         </div>
       </nav>
