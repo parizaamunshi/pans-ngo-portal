@@ -1,0 +1,455 @@
+/* Payment Component Styles */
+.payment-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: #f8fafc;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.payment-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  background: #ffffff;
+  color: #2d3748;
+  padding: 3rem 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e2e8f0;
+}
+
+.payment-header h1 {
+  font-size: 2.5rem;
+  margin: 0 0 0.5rem 0;
+  font-weight: 700;
+  color: #2d3748;
+}
+
+.payment-header p {
+  font-size: 1.2rem;
+  margin: 0;
+  color: #4a5568;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 50vh;
+  color: #4a5568;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #e2e8f0;
+  border-top: 4px solid #3182ce;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Payment Stats */
+.payment-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.stat-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid #e2e8f0;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.stat-card h3 {
+  color: #4a5568;
+  font-size: 1rem;
+  margin: 0 0 1rem 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.stat-number {
+  display: block;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #3182ce;
+  margin: 0;
+}
+
+/* Clusters Container */
+.clusters-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.no-data {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  color: #718096;
+  border: 1px solid #e2e8f0;
+}
+
+.no-data h3 {
+  color: #4a5568;
+  margin-bottom: 1rem;
+}
+
+/* Cluster Accordion */
+.cluster-accordion {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: all 0.2s ease;
+  border: 1px solid #e2e8f0;
+}
+
+.cluster-accordion:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.accordion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem;
+  cursor: pointer;
+  background: #f7fafc;
+  border-bottom: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+}
+
+.accordion-header:hover {
+  background: #edf2f7;
+}
+
+.header-left h3 {
+  margin: 0 0 0.5rem 0;
+  color: #2d3748;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.cluster-info {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.artisan-count, .cluster-rating {
+  background: #3182ce;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.cluster-rating {
+  background: #38a169;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.total-amount {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #38a169;
+}
+
+.arrow {
+  font-size: 1.2rem;
+  color: #4a5568;
+  transition: transform 0.2s ease;
+}
+
+.arrow.expanded {
+  transform: rotate(180deg);
+}
+
+/* Accordion Content */
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease;
+}
+
+.accordion-content.expanded {
+  max-height: 2000px;
+}
+
+.artisans-list {
+  padding: 1.5rem;
+  background: #f8fafc;
+}
+
+.no-artisans {
+  text-align: center;
+  padding: 2rem;
+  color: #718096;
+}
+
+/* Artisan Card */
+.artisan-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: all 0.2s ease;
+  border: 1px solid #e2e8f0;
+}
+
+.artisan-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.artisan-card:last-child {
+  margin-bottom: 0;
+}
+
+.artisan-info {
+  flex: 1;
+}
+
+.artisan-name h4 {
+  margin: 0 0 0.25rem 0;
+  color: #2d3748;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.artisan-id {
+  color: #718096;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.artisan-details {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.artisan-details span {
+  background: #f7fafc;
+  padding: 0.25rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  color: #4a5568;
+  font-weight: 500;
+}
+
+.rating {
+  background: #fef5e7 !important;
+  color: #c05621 !important;
+}
+
+.orders {
+  background: #ebf8ff !important;
+  color: #2b6cb0 !important;
+}
+
+.skills {
+  background: #f0fff4 !important;
+  color: #25855a !important;
+}
+
+.payment-amount {
+  text-align: right;
+}
+
+.amount {
+  display: block;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #38a169;
+  margin-bottom: 0.5rem;
+}
+
+.status {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status.pending {
+  background: #fef5e7;
+  color: #c05621;
+}
+
+/* Cluster Footer */
+.cluster-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem;
+  background: #f7fafc;
+  border-top: 1px solid #e2e8f0;
+}
+
+.total-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.total-label {
+  font-size: 1.2rem;
+  color: #4a5568;
+  font-weight: 600;
+}
+
+.total-value {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #38a169;
+}
+
+/* Pay All Button */
+.pay-all-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #38a169;
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(56, 161, 105, 0.2);
+  min-width: 150px;
+  justify-content: center;
+}
+
+.pay-all-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(56, 161, 105, 0.3);
+  background: #2f855a;
+}
+
+.pay-all-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.pay-all-btn.processing {
+  background: #3182ce;
+}
+
+.pay-all-btn.completed {
+  background: #38a169;
+}
+
+.btn-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .payment-container {
+    padding: 1rem;
+  }
+
+  .payment-header {
+    padding: 2rem 1rem;
+  }
+
+  .payment-header h1 {
+    font-size: 2rem;
+  }
+
+  .payment-stats {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .accordion-header {
+    padding: 1.5rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .header-right {
+    align-self: flex-end;
+  }
+
+  .artisan-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .payment-amount {
+    text-align: left;
+    width: 100%;
+  }
+
+  .cluster-footer {
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: flex-start;
+  }
+
+  .total-section {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .pay-all-btn {
+    width: 100%;
+  }
+
+  .artisan-details {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}

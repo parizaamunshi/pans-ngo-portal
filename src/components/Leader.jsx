@@ -2,227 +2,382 @@
 
 
 
-import React, { useState } from 'react';
 
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import PhotoGeoLocator from './PhotoGeoLocator';
 import OrderDetails from './OrderDetails';
 import ArtisanDetails from './ArtisanDetails';
 import AllArtisans from './AllArtisans';
 
-
 function Leader() {
-  // Example order data with new fields
-  const order1 = {
-    OrderQuantity: 10,
-    orderDate: '2025-07-10',
-    TypeofProd: 'Rakhis',
-    customerName: 'Amit',
-    deliverAddress: 'Bangalore',
-    estimatedDeliveryDate: '2025-07-15',
-    Specifications: 'Color: Blue, Size: Medium',
-    status: 'Pending',
-    productcost: 500,
-  };
-  const order2 = {
-    OrderQuantity: 100,
-    orderDate: '2025-05-10',
-    TypeofProd: 'Toys',
-    customerName: 'Priya',
-    deliverAddress: 'Bangalore',
-    estimatedDeliveryDate: '2025-05-15',
-    Specifications: 'Color: Blue, Size: Large',
-    status: 'Delivered',
-    productcost: 8000,
-  };
-  const order3 = {
-    OrderQuantity: 130,
-    orderDate: '2025-07-01',
-    TypeofProd: 'Toys2',
-    customerName: 'Rahul',
-    deliverAddress: 'Raipur',
-    estimatedDeliveryDate: '2025-07-15',
-    Specifications: 'Color: Green, Size: Medium',
-    status: 'In Progress',
-    productcost: 12000,
-  };
-  const orders = [order1, order2, order3];
-  const totalProducts = orders.reduce((sum, order) => sum + order.OrderQuantity, 0);
-
-  // Example artisans data
-  const artisans = [
-    {
-      artisian_id: 'A101',
-      artisian_name: 'Sita',
-      artisian_rating: 4.8,
-      total_orders: 50,
-      total_revenue: 25000,
-      current_order: 'Rakhis',
-      amount_to_be_paid: 2000,
-      skills: ['Threadwork', 'Beading'],
-    },
-    {
-      artisian_id: 'A102',
-      artisian_name: 'Geeta',
-      artisian_rating: 4.5,
-      total_orders: 40,
-      total_revenue: 20000,
-      current_order: 'Toys',
-      amount_to_be_paid: 1500,
-      skills: ['Woodwork', 'Painting'],
-    },
-    {
-      artisian_id: 'A103',
-      artisian_name: 'Radha',
-      artisian_rating: 4.9,
-      total_orders: 60,
-      total_revenue: 30000,
-      current_order: 'Toys2',
-      amount_to_be_paid: 2500,
-      skills: ['Sewing', 'Embroidery'],
-    },
-  ];
-  const artisansUnder = artisans.length;
-  const avgArtisansRating = (artisans.reduce((sum, a) => sum + a.artisian_rating, 0) / artisans.length).toFixed(2);
-
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const navigate = useNavigate();
+  const clusterId = 1; // You can make this dynamic later
+  
+  // State management
+  const [clusterData, setClusterData] = useState(null);
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [selectedOrderIdx, setSelectedOrderIdx] = useState(null);
-  const [showAll, setShowAll] = useState(false);
-  const [artisanDropdownOpen, setArtisanDropdownOpen] = useState(false);
   const [selectedArtisanIdx, setSelectedArtisanIdx] = useState(null);
+  const [showAllOrders, setShowAllOrders] = useState(false);
+  const [showArtisans, setShowArtisans] = useState(false);
 
-  const handleDropdown = () => {
-    setDropdownOpen((prev) => {
-      if (!prev) setShowAll(false); // If opening dropdown, close showAll
-      return !prev;
-    });
-    setSelectedOrderIdx(null);
-    setSelectedArtisanIdx(null);
+  // Fetch cluster data and orders on component mount
+  useEffect(() => {
+    fetchClusterData();
+    fetchOrders();
+  }, []);
+
+  const fetchClusterData = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`http://localhost:3000/api/clusters/${clusterId}`);
+      setClusterData(response.data);
+      console.log("Cluster Data:", response.data);
+    } catch (error) {
+      console.error("Error fetching cluster data:", error);
+      setError("Failed to fetch cluster data");
+    } finally {
+      setLoading(false);
+    }
   };
-  const handleSelect = (idx) => {
-    setSelectedOrderIdx(idx);
-    setDropdownOpen(false);
-    setShowAll(false);
-    setSelectedArtisanIdx(null);
+
+  const fetchOrders = async () => {
+    try {
+      const response = await axios.get('http://localhost:3000/api/orderDetails');
+      // Filter orders assigned to this cluster
+      const clusterOrders = response.data.filter(order => order.assignedTo === clusterId);
+      setOrders(clusterOrders);
+      console.log("All Orders Data:", response.data);
+      console.log("Filtered Orders for Cluster", clusterId, ":", clusterOrders);
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+      setError("Failed to fetch orders");
+    }
   };
-  const handleShowAll = () => {
-    setShowAll((prev) => {
-      if (!prev) setDropdownOpen(false); // If opening showAll, close dropdown
-      return !prev;
-    });
-    setSelectedOrderIdx(null);
-    setSelectedArtisanIdx(null);
+
+  // Calculate stats
+  const getStats = () => {
+    if (!clusterData || !clusterData.artisans) {
+      return { totalArtisans: 0, avgRating: 0, totalOrders: 0, pendingOrders: 0 };
+    }
+
+    const totalArtisans = clusterData.artisans.length;
+    const avgRating = totalArtisans > 0 
+      ? (clusterData.artisans.reduce((sum, artisan) => sum + (artisan.artisan_rating || 0), 0) / totalArtisans).toFixed(1)
+      : 0;
+    const totalOrders = orders.length;
+    const pendingOrders = orders.filter(order => order.status === 'Pending').length;
+
+    return { totalArtisans, avgRating, totalOrders, pendingOrders };
   };
-  const handleArtisanDropdown = () => setArtisanDropdownOpen(!artisanDropdownOpen);
-  const handleSelectArtisan = (idx) => {
-    setSelectedArtisanIdx(idx);
-    setArtisanDropdownOpen(false);
-    setSelectedOrderIdx(null);
-    setShowAll(false);
-  };
+
+  const stats = getStats();
+
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', fontFamily: 'Segoe UI, Arial, sans-serif' }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ width: '50px', height: '50px', border: '4px solid #e2e8f0', borderTop: '4px solid #3182ce', borderRadius: '50%', animation: 'spin 1s linear infinite', margin: '0 auto 1rem' }}></div>
+          <p style={{ color: '#4a5568', fontSize: '1.1rem' }}>Loading dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div style={{ maxWidth: '800px', margin: '2rem auto', padding: '2rem', textAlign: 'center', fontFamily: 'Segoe UI, Arial, sans-serif' }}>
+        <div style={{ background: '#fed7d7', color: '#c53030', padding: '1rem', borderRadius: '8px', border: '1px solid #feb2b2' }}>
+          <h3>Error Loading Dashboard</h3>
+          <p>{error}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            style={{ background: '#c53030', color: 'white', border: 'none', padding: '0.5rem 1rem', borderRadius: '6px', cursor: 'pointer' }}
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="leader" style={{ maxWidth: '1400px', width: '95vw', margin: '0 auto', textAlign: 'center', fontFamily: 'Segoe UI, Arial, sans-serif' }}>
-      {/* Navbar */}
+    <div style={{ maxWidth: '1400px', width: '95vw', margin: '0 auto', fontFamily: 'Segoe UI, Arial, sans-serif', background: '#f8fafc', minHeight: '100vh' }}>
+      
+      {/* Navigation Bar */}
       <nav style={{
-        position: 'relative',
-        left: 0,
-        top: 0,
-        width: '100vw',
-        minWidth: '100vw',
-        background: 'linear-gradient(90deg, #1976d2 0%, #42a5f5 100%)',
-        padding: '1.2rem 0 1.2rem 0',
-        marginBottom: '2.5rem',
-        boxShadow: '0 2px 8px #1976d233',
+        background: '#ffffff',
+        padding: '1rem 2rem',
+        marginBottom: '2rem',
+        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+        borderRadius: '0 0 12px 12px',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        gap: '3rem',
-        fontSize: '1.2rem',
-        fontWeight: 500,
-        borderRadius: '0 0 12px 12px',
-        zIndex: 10,
+        gap: '2rem',
+        border: '1px solid #e2e8f0'
       }}>
-        <span
-          style={{ color: 'white', cursor: 'pointer', letterSpacing: 1 }}
-          onClick={() => {
-            setShowAll(true);
-            setDropdownOpen(false);
-            setSelectedOrderIdx(null);
-            setSelectedArtisanIdx(null);
-          }}
-        >
-          View Orders
-        </span>
-        <span style={{ color: 'white', cursor: 'pointer', letterSpacing: 1 }}>Update Status</span>
-        <span style={{ color: 'white', cursor: 'pointer', letterSpacing: 1 }}>Track Orders</span>
-        <span style={{ color: 'white', cursor: 'pointer', letterSpacing: 1 }}>View Feedback</span>
-      </nav>
-      <div style={{ background: 'linear-gradient(90deg, #388e3c 0%, #1976d2 100%)', color: 'white', borderRadius: 10, padding: '2.5rem', marginBottom: '2.5rem', boxShadow: '0 2px 8px #0001', maxWidth: '1200px', marginLeft: 'auto', marginRight: 'auto' }}>
-        <h2 style={{ margin: 0 }}>Total Products Received: <span style={{ color: '#fbc02d' }}>{totalProducts}</span></h2>
-      </div>
-      <div style={{ background: 'white', borderRadius: 10, boxShadow: '0 2px 8px #0001', padding: '2.5rem', marginBottom: '2.5rem', maxWidth: '1200px', marginLeft: 'auto', marginRight: 'auto' }}>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginBottom: '1rem' }}>
-          <button onClick={handleDropdown} style={{ padding: '0.5rem 1.2rem', fontSize: '1rem', background: '#1976d2', color: 'white', border: 'none', borderRadius: 6, cursor: 'pointer', fontWeight: 500 }}>
-            {dropdownOpen ? 'Hide Products' : 'Show Products'}
+        <h2 style={{ margin: 0, color: '#2d3748', fontSize: '1.5rem', fontWeight: '600' }}>Leader Dashboard</h2>
+        <div style={{ display: 'flex', gap: '2rem', marginLeft: 'auto' }}>
+          <button
+            style={{ background: 'transparent', border: 'none', color: '#3182ce', cursor: 'pointer', fontSize: '1rem', fontWeight: '500', padding: '0.5rem 1rem', borderRadius: '6px', transition: 'background 0.2s' }}
+            onMouseEnter={(e) => e.target.style.background = '#ebf8ff'}
+            onMouseLeave={(e) => e.target.style.background = 'transparent'}
+            onClick={() => setShowAllOrders(!showAllOrders)}
+          >
+            View Orders
           </button>
-          <button onClick={handleShowAll} style={{ padding: '0.5rem 1.2rem', fontSize: '1rem', background: '#388e3c', color: 'white', border: 'none', borderRadius: 6, cursor: 'pointer', fontWeight: 500 }}>
-            {showAll ? 'Hide All Products' : 'Show All Products'}
+          <button
+            style={{ background: 'transparent', border: 'none', color: '#3182ce', cursor: 'pointer', fontSize: '1rem', fontWeight: '500', padding: '0.5rem 1rem', borderRadius: '6px', transition: 'background 0.2s' }}
+            onMouseEnter={(e) => e.target.style.background = '#ebf8ff'}
+            onMouseLeave={(e) => e.target.style.background = 'transparent'}
+            onClick={() => navigate('/barcode')}
+          >
+            Update Status
           </button>
-          {/* Artisan Details Button - currently links to empty page */}
-          <a href="" style={{ textDecoration: 'none' }}>
-            <button style={{ padding: '0.5rem 1.2rem', fontSize: '1rem', background: '#fbc02d', color: '#333', border: 'none', borderRadius: 6, fontWeight: 500, cursor: 'pointer' }}>
-              Artisan Details
-            </button>
-          </a>
+          <button
+            style={{ background: 'transparent', border: 'none', color: '#3182ce', cursor: 'pointer', fontSize: '1rem', fontWeight: '500', padding: '0.5rem 1rem', borderRadius: '6px', transition: 'background 0.2s' }}
+            onMouseEnter={(e) => e.target.style.background = '#ebf8ff'}
+            onMouseLeave={(e) => e.target.style.background = 'transparent'}
+            onClick={() => navigate('/trackorder')}
+          >
+            Track Orders
+          </button>
+          <button
+            style={{ background: 'transparent', border: 'none', color: '#3182ce', cursor: 'pointer', fontSize: '1rem', fontWeight: '500', padding: '0.5rem 1rem', borderRadius: '6px', transition: 'background 0.2s' }}
+            onMouseEnter={(e) => e.target.style.background = '#ebf8ff'}
+            onMouseLeave={(e) => e.target.style.background = 'transparent'}
+            onClick={() => navigate('/feedback')}
+          >
+            View Feedback
+          </button>
+          <button
+            style={{ background: 'transparent', border: 'none', color: '#3182ce', cursor: 'pointer', fontSize: '1rem', fontWeight: '500', padding: '0.5rem 1rem', borderRadius: '6px', transition: 'background 0.2s' }}
+            onMouseEnter={(e) => e.target.style.background = '#ebf8ff'}
+            onMouseLeave={(e) => e.target.style.background = 'transparent'}
+            onClick={() => navigate('/photogeolocator')}
+          >
+             Photo Geo Locator
+          </button>
         </div>
-        {dropdownOpen && (
-          <ul style={{ listStyle: 'none', padding: 0, margin: '1rem 0', border: '1px solid #ccc', borderRadius: 6, background: '#f7fafd', maxWidth: 400, marginLeft: 'auto', marginRight: 'auto', boxShadow: '0 1px 4px #1976d233' }}>
-            {orders.map((order, idx) => (
-              <li key={idx} style={{ padding: '0.7rem', cursor: 'pointer', borderBottom: idx !== orders.length - 1 ? '1px solid #eee' : 'none', fontWeight: 500, color: '#1976d2' }}
-                  onClick={() => handleSelect(idx)}>
-                {idx + 1}. {order.TypeofProd}
-              </li>
-            ))}
-          </ul>
-        )}
-        {selectedOrderIdx !== null && (
-          <div style={{ marginTop: '2rem' }}>
-            <OrderDetails order={orders[selectedOrderIdx]} />
+      </nav>
+
+      {/* Stats Cards */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', marginBottom: '2rem', padding: '0 1rem' }}>
+        <div style={{ background: 'white', padding: '2rem', borderRadius: '12px', textAlign: 'center', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)', border: '1px solid #e2e8f0' }}>
+          <h3 style={{ color: '#4a5568', fontSize: '0.9rem', margin: '0 0 1rem 0', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: '600' }}>Total Orders</h3>
+          <span style={{ display: 'block', fontSize: '2.5rem', fontWeight: '800', color: '#3182ce', margin: 0 }}>{stats.totalOrders}</span>
+        </div>
+        <div style={{ background: 'white', padding: '2rem', borderRadius: '12px', textAlign: 'center', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)', border: '1px solid #e2e8f0' }}>
+          <h3 style={{ color: '#4a5568', fontSize: '0.9rem', margin: '0 0 1rem 0', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: '600' }}>Pending Orders</h3>
+          <span style={{ display: 'block', fontSize: '2.5rem', fontWeight: '800', color: '#e53e3e', margin: 0 }}>{stats.pendingOrders}</span>
+        </div>
+        <div style={{ background: 'white', padding: '2rem', borderRadius: '12px', textAlign: 'center', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)', border: '1px solid #e2e8f0' }}>
+          <h3 style={{ color: '#4a5568', fontSize: '0.9rem', margin: '0 0 1rem 0', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: '600' }}>Total Artisans</h3>
+          <span style={{ display: 'block', fontSize: '2.5rem', fontWeight: '800', color: '#38a169', margin: 0 }}>{stats.totalArtisans}</span>
+        </div>
+        <div style={{ background: 'white', padding: '2rem', borderRadius: '12px', textAlign: 'center', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)', border: '1px solid #e2e8f0' }}>
+          <h3 style={{ color: '#4a5568', fontSize: '0.9rem', margin: '0 0 1rem 0', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: '600' }}>Avg Rating</h3>
+          <span style={{ display: 'block', fontSize: '2.5rem', fontWeight: '800', color: '#d69e2e', margin: 0 }}>{stats.avgRating}/5</span>
+        </div>
+      </div>
+
+      {/* Cluster Information */}
+      {clusterData && (
+        <div style={{ background: 'white', borderRadius: '12px', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)', padding: '2rem', marginBottom: '2rem', margin: '0 1rem 2rem', border: '1px solid #e2e8f0' }}>
+          <h2 style={{ color: '#2d3748', marginBottom: '1rem', fontSize: '1.5rem', fontWeight: '600' }}>Cluster Information</h2>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
+            <div>
+              <strong style={{ color: '#4a5568' }}>Cluster ID:</strong>
+              <span style={{ marginLeft: '0.5rem', color: '#2d3748' }}>{clusterData.cluster_id}</span>
+            </div>
+            <div>
+              <strong style={{ color: '#4a5568' }}>Leader ID:</strong>
+              <span style={{ marginLeft: '0.5rem', color: '#2d3748' }}>{clusterData.leader_id}</span>
+            </div>
+            <div>
+              <strong style={{ color: '#4a5568' }}>Cluster Rating:</strong>
+              <span style={{ marginLeft: '0.5rem', color: '#d69e2e', fontWeight: '600' }}>{clusterData.cluster_rating}/5</span>
+            </div>
+            <div>
+              <strong style={{ color: '#4a5568' }}>Leader Rating:</strong>
+              <span style={{ marginLeft: '0.5rem', color: '#d69e2e', fontWeight: '600' }}>{clusterData.leader_rating}/5</span>
+            </div>
           </div>
-        )}
-        {showAll && (
-          <div style={{ marginTop: '2rem' }}>
-            {orders.map((order, idx) => (
-              <OrderDetails key={idx} order={order} />
-            ))}
+        </div>
+      )}
+
+      {/* Artisans Section */}
+      {clusterData && clusterData.artisans && (
+        <div style={{ background: 'white', borderRadius: '12px', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)', padding: '2rem', marginBottom: '2rem', margin: '0 1rem 2rem', border: '1px solid #e2e8f0' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+            <h2 style={{ color: '#2d3748', margin: 0, fontSize: '1.5rem', fontWeight: '600' }}>Artisans Management</h2>
+            <button 
+              onClick={() => setShowArtisans(!showArtisans)}
+              style={{ background: '#38a169', color: 'white', border: 'none', padding: '0.75rem 1.5rem', borderRadius: '8px', cursor: 'pointer', fontSize: '1rem', fontWeight: '500', transition: 'background 0.2s' }}
+              onMouseEnter={(e) => e.target.style.background = '#2f855a'}
+              onMouseLeave={(e) => e.target.style.background = '#38a169'}
+            >
+              {showArtisans ? 'Hide Artisans' : 'Show Artisans'}
+            </button>
+          </div>
+          
+          {showArtisans && (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1rem' }}>
+              {clusterData.artisans.map((artisan, idx) => (
+                <div 
+                  key={artisan.artisan_id} 
+                  style={{ 
+                    background: '#f7fafc', 
+                    padding: '1.5rem', 
+                    borderRadius: '8px', 
+                    border: '1px solid #e2e8f0',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.transform = 'translateY(-2px)';
+                    e.target.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.12)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.transform = 'translateY(0)';
+                    e.target.style.boxShadow = 'none';
+                  }}
+                  onClick={() => setSelectedArtisanIdx(selectedArtisanIdx === idx ? null : idx)}
+                >
+                  <h4 style={{ color: '#2d3748', margin: '0 0 0.5rem 0', fontSize: '1.1rem', fontWeight: '600' }}>
+                    {artisan.artisan_name}
+                  </h4>
+                  <p style={{ color: '#718096', margin: '0 0 1rem 0', fontSize: '0.9rem' }}>
+                    ID: {artisan.artisan_id}
+                  </p>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ background: '#fef5e7', color: '#c05621', padding: '0.25rem 0.75rem', borderRadius: '6px', fontSize: '0.85rem', fontWeight: '600' }}>
+                      Rating: {artisan.artisan_rating}/5
+                    </span>
+                    <span style={{ background: '#ebf8ff', color: '#2b6cb0', padding: '0.25rem 0.75rem', borderRadius: '6px', fontSize: '0.85rem', fontWeight: '600' }}>
+                      Orders: {artisan.total_orders}
+                    </span>
+                  </div>
+                  <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid #e2e8f0' }}>
+                    <p style={{ margin: '0.25rem 0', fontSize: '0.9rem', color: '#4a5568' }}>
+                      <strong>Revenue:</strong> ₹{artisan.total_revenue?.toLocaleString() || 0}
+                    </p>
+                    <p style={{ margin: '0.25rem 0', fontSize: '0.9rem', color: '#4a5568' }}>
+                      <strong>Pending Payment:</strong> ₹{artisan.amount_to_be_paid?.toLocaleString() || 0}
+                    </p>
+                    <p style={{ margin: '0.25rem 0', fontSize: '0.9rem', color: '#4a5568' }}>
+                      <strong>Skills:</strong> {artisan.skills?.join(', ') || 'Not specified'}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Orders Section */}
+      <div style={{ background: 'white', borderRadius: '12px', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)', padding: '2rem', margin: '0 1rem 2rem', border: '1px solid #e2e8f0' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+          <h2 style={{ color: '#2d3748', margin: 0, fontSize: '1.5rem', fontWeight: '600' }}>Orders Management</h2>
+          <button 
+            onClick={() => setShowAllOrders(!showAllOrders)}
+            style={{ background: '#3182ce', color: 'white', border: 'none', padding: '0.75rem 1.5rem', borderRadius: '8px', cursor: 'pointer', fontSize: '1rem', fontWeight: '500', transition: 'background 0.2s' }}
+            onMouseEnter={(e) => e.target.style.background = '#2c5aa0'}
+            onMouseLeave={(e) => e.target.style.background = '#3182ce'}
+          >
+            {showAllOrders ? 'Hide Orders' : 'Show Orders'}
+          </button>
+        </div>
+
+        {showAllOrders && (
+          <div>
+            {orders.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '3rem', color: '#718096' }}>
+                <h3 style={{ color: '#4a5568' }}>No orders assigned to this cluster yet</h3>
+                <p>Orders will appear here once they are assigned to cluster ID: {clusterId}</p>
+                <p style={{ fontSize: '0.9rem', color: '#a0aec0' }}>
+                  Debug Info: Cluster ID = {clusterId}, Total orders in system will be checked for assignedTo = {clusterId}
+                </p>
+              </div>
+            ) : (
+              <div>
+                <div style={{ marginBottom: '1rem', padding: '1rem', background: '#f7fafc', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                  <p style={{ margin: 0, color: '#4a5568', fontSize: '0.9rem' }}>
+                    <strong>Found {orders.length} order(s) assigned to Cluster {clusterId}</strong>
+                  </p>
+                </div>
+                <div style={{ overflowX: 'auto' }}>
+                  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
+                    <thead>
+                    <tr style={{ background: '#f7fafc', borderBottom: '2px solid #e2e8f0' }}>
+                      <th style={{ padding: '1rem', textAlign: 'left', color: '#4a5568', fontWeight: '600' }}>Order ID</th>
+                      <th style={{ padding: '1rem', textAlign: 'left', color: '#4a5568', fontWeight: '600' }}>Product</th>
+                      <th style={{ padding: '1rem', textAlign: 'left', color: '#4a5568', fontWeight: '600' }}>Customer</th>
+                      <th style={{ padding: '1rem', textAlign: 'left', color: '#4a5568', fontWeight: '600' }}>Quantity</th>
+                      <th style={{ padding: '1rem', textAlign: 'left', color: '#4a5568', fontWeight: '600' }}>Status</th>
+                      <th style={{ padding: '1rem', textAlign: 'left', color: '#4a5568', fontWeight: '600' }}>Cost</th>
+                      <th style={{ padding: '1rem', textAlign: 'left', color: '#4a5568', fontWeight: '600' }}>Delivery Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {orders.map((order, idx) => (
+                      <tr key={order._id || idx} style={{ borderBottom: '1px solid #e2e8f0' }}>
+                        <td style={{ padding: '1rem', color: '#2d3748' }}>
+                          {order._id ? order._id.slice(-8) : `ORD-${idx + 1}`}
+                        </td>
+                        <td style={{ padding: '1rem', color: '#2d3748' }}>{order.typeOfProduct || 'N/A'}</td>
+                        <td style={{ padding: '1rem', color: '#2d3748' }}>{order.customerName || 'N/A'}</td>
+                        <td style={{ padding: '1rem', color: '#2d3748' }}>{order.orderQuantity || 'N/A'}</td>
+                        <td style={{ padding: '1rem' }}>
+                          <span style={{ 
+                            background: order.status === 'Pending' ? '#fef5e7' : order.status === 'In Progress' ? '#ebf8ff' : order.status === 'Completed' ? '#f0fff4' : '#f7fafc',
+                            color: order.status === 'Pending' ? '#c05621' : order.status === 'In Progress' ? '#2b6cb0' : order.status === 'Completed' ? '#25855a' : '#4a5568',
+                            padding: '0.25rem 0.75rem', 
+                            borderRadius: '6px', 
+                            fontSize: '0.8rem', 
+                            fontWeight: '600' 
+                          }}>
+                            {order.status || 'Unknown'}
+                          </span>
+                        </td>
+                        <td style={{ padding: '1rem', color: '#2d3748', fontWeight: '600' }}>
+                          ₹{order.productCost ? order.productCost.toLocaleString() : '0'}
+                        </td>
+                        <td style={{ padding: '1rem', color: '#2d3748' }}>
+                          {order.estimatedDeliveryDate ? new Date(order.estimatedDeliveryDate).toLocaleDateString() : 'N/A'}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
 
-      {/* Artisans Section */}
-      <div style={{ background: 'white', borderRadius: 10, boxShadow: '0 2px 8px #0001', padding: '2.5rem', marginBottom: '2.5rem', maxWidth: '1200px', marginLeft: 'auto', marginRight: 'auto' }}>
-        <h2 style={{ color: '#388e3c' }}>Artisans Under Leader: <span>{artisansUnder}</span></h2>
-        <h3 style={{ color: '#fbc02d' }}>Average Artisan Rating: <span>{avgArtisansRating}</span></h3>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', marginBottom: '1rem' }}>
-          <button onClick={handleArtisanDropdown} style={{ padding: '0.5rem 1.2rem', fontSize: '1rem', background: '#388e3c', color: 'white', border: 'none', borderRadius: 6, cursor: 'pointer', fontWeight: 500 }}>
-            {artisanDropdownOpen ? 'Hide Artisans' : 'Show Artisans'}
-          </button>
+      {/* Selected Artisan Details */}
+      {selectedArtisanIdx !== null && clusterData?.artisans?.[selectedArtisanIdx] && (
+        <div style={{ background: 'white', borderRadius: '12px', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)', padding: '2rem', margin: '0 1rem 2rem', border: '1px solid #e2e8f0' }}>
+          <ArtisanDetails artisan={clusterData.artisans[selectedArtisanIdx]} />
         </div>
-        {artisanDropdownOpen && (
-          <ul style={{ listStyle: 'none', padding: 0, margin: '1rem 0', border: '1px solid #ccc', borderRadius: 6, maxWidth: 400, marginLeft: 'auto', marginRight: 'auto', background: '#f7fafd', boxShadow: '0 1px 4px #388e3c22' }}>
-            {artisans.map((artisan, idx) => (
-              <li key={idx} style={{ padding: '0.7rem', cursor: 'pointer', borderBottom: idx !== artisans.length - 1 ? '1px solid #eee' : 'none', fontWeight: 500, color: '#388e3c' }}
-                  onClick={() => handleSelectArtisan(idx)}>
-                {idx + 1}. {artisan.artisian_name} (ID: {artisan.artisian_id})
-              </li>
-            ))}
-          </ul>
-        )}
-        {selectedArtisanIdx !== null && (
-          <div style={{ marginTop: '2rem' }}>
-            <ArtisanDetails artisan={artisans[selectedArtisanIdx]} />
-          </div>
-        )}
-      </div>
+      )}
+
+      <style>
+        {`
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `}
+      </style>
     </div>
   );
 }
