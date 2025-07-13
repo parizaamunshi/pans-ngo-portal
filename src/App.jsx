@@ -8,7 +8,7 @@ import Village4 from "./components/villages/village4";
 import Village5 from "./components/villages/village5";
 import Barcode from "./components/Barcode";
 import HomeLeader from "./components/home_leader";
-import TrackOrder from "./components/TrackOrder"; // <-- Import your timeline component
+import TrackOrder from "./components/TrackOrder";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
