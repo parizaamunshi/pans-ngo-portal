@@ -1,0 +1,58 @@
+/* White card styling with padding, rounded corners, and shadow */
+.artisan-card {
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  border: 1px solid #e0e0e0;
+  transition: box-shadow 0.3s ease;
+  max-width: 300px;
+  width: 100%;
+}
+
+.artisan-card:hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Text styling for visibility on white background */
+.artisan-card h3 {
+  color: #2c3e50;
+  margin: 10px 0;
+  font-size: 1.4rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.artisan-card div {
+  color: #34495e;
+  margin: 8px 0;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.artisan-card strong {
+  color: #2980b9;
+  font-weight: 600;
+}
+
+/* Star rating styling */
+.artisan-card span {
+  color: #f39c12;
+  font-size: 1.1rem;
+}
+
+/* Artisan profile photo styling */
+.artisan-photo-container {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.artisan-photo {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #ddd;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}

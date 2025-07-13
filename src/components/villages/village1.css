@@ -1,0 +1,113 @@
+/* .village-wrapper {
+  padding: 40px;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+  text-align: center;
+}
+
+.village-title {
+  font-size: 36px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.search-bar {
+  padding: 10px 16px;
+  font-size: 16px;
+  border: 2px solid #6c63ff;
+  border-radius: 8px;
+  outline: none;
+  background-color: #fff;
+  width: 250px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.artisan-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  max-width: 800px;
+  margin: auto;
+}
+
+.artisan-card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  transition: 0.3s ease;
+}
+
+.artisan-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+} */
+
+
+
+
+.village-wrapper {
+  padding: 40px;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  min-height: 100vh;
+  text-align: center;
+}
+
+.village-title {
+  font-size: 36px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.search-bar {
+  padding: 10px 16px;
+  font-size: 16px;
+  border: 2px solid #6c63ff;
+  border-radius: 8px;
+  outline: none;
+  background-color: #fff;
+  width: 250px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.artisan-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  max-width: 800px;
+  margin: auto;
+}
+
+.artisan-card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  transition: 0.3s ease;
+}
+
+.artisan-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
