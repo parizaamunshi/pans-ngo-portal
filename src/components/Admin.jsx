@@ -69,13 +69,13 @@ function Admin() {
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
-   
-   const handleSubmit = async (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setOrders([...orders, form]);
     await axios.get('http://localhost:3000/api/clusters').then(response => {
       const clusters = response.data;
-    
+
       setPriority(
         clusters.sort((a, b) => b.cluster_rating - a.cluster_rating)
       );
@@ -91,7 +91,7 @@ function Admin() {
       deliveryAddress: form.deliverAddress,
       estimatedDeliveryDate: form.estimatedDeliveryDate,
       specifications: form.Specifications,
-      assignedTo : priority.length > 0 ? priority[0].cluster_id : null,
+      assignedTo: priority.length > 0 ? priority[0]._id : null,
       status: form.status,
       productCost: form.productcost
     }).then(respone => {
@@ -124,55 +124,55 @@ function Admin() {
           marginRight: 'auto',
           background: '#f7fafd'
         }}>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: '2rem',
-          maxWidth: '800px',
-          margin: '0 auto',
-          color:"black"
-        }}>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <label htmlFor="OrderQuantity">Order Quantity</label>
-            <input id="OrderQuantity" name="OrderQuantity" value={form.OrderQuantity} onChange={handleChange} required style={{ margin: 4 }} />
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: '2rem',
+            maxWidth: '800px',
+            margin: '0 auto',
+            color: "black"
+          }}>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <label htmlFor="OrderQuantity">Order Quantity</label>
+              <input id="OrderQuantity" name="OrderQuantity" value={form.OrderQuantity} onChange={handleChange} required style={{ margin: 4 }} />
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <label htmlFor="orderDate">Order Date</label>
+              <input id="orderDate" name="orderDate" value={form.orderDate} onChange={handleChange} required style={{ margin: 4 }} />
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <label htmlFor="TypeofProd">Type of Product</label>
+              <input id="TypeofProd" name="TypeofProd" value={form.TypeofProd} onChange={handleChange} required style={{ margin: 4 }} />
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <label htmlFor="customerName">Customer Name</label>
+              <input id="customerName" name="customerName" value={form.customerName} onChange={handleChange} required style={{ margin: 4 }} />
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <label htmlFor="deliverAddress">Delivery Address</label>
+              <input id="deliverAddress" name="deliverAddress" value={form.deliverAddress} onChange={handleChange} required style={{ margin: 4 }} />
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <label htmlFor="estimatedDeliveryDate">Estimated Delivery Date</label>
+              <input id="estimatedDeliveryDate" name="estimatedDeliveryDate" value={form.estimatedDeliveryDate} onChange={handleChange} required style={{ margin: 4 }} />
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <label htmlFor="Specifications">Specifications</label>
+              <input id="Specifications" name="Specifications" value={form.Specifications} onChange={handleChange} required style={{ margin: 4 }} />
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <label htmlFor="status">Status</label>
+              <input id="status" name="status" value={form.status} onChange={handleChange} required style={{ margin: 4 }} />
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <label htmlFor="productcost">Product Cost</label>
+              <input id="productcost" name="productcost" value={form.productcost} onChange={handleChange} required style={{ margin: 4 }} />
+            </div>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <label htmlFor="orderDate">Order Date</label>
-            <input id="orderDate"  name="orderDate" value={form.orderDate} onChange={handleChange} required style={{ margin: 4 }} />
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '1rem', gridColumn: '1 / -1' }}>
+            <button type="submit" style={{ margin: 8, padding: '0.7rem 2rem', fontSize: '1.1rem', background: '#1976d2', color: 'white', border: 'none', borderRadius: 6, boxShadow: '0 1px 4px #1976d233', cursor: 'pointer', fontWeight: 500 }}>Add Product</button>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <label htmlFor="TypeofProd">Type of Product</label>
-            <input id="TypeofProd" name="TypeofProd" value={form.TypeofProd} onChange={handleChange} required style={{ margin: 4 }} />
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <label htmlFor="customerName">Customer Name</label>
-            <input id="customerName" name="customerName" value={form.customerName} onChange={handleChange} required style={{ margin: 4 }} />
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <label htmlFor="deliverAddress">Delivery Address</label>
-            <input id="deliverAddress" name="deliverAddress" value={form.deliverAddress} onChange={handleChange} required style={{ margin: 4 }} />
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <label htmlFor="estimatedDeliveryDate">Estimated Delivery Date</label>
-            <input id="estimatedDeliveryDate"  name="estimatedDeliveryDate" value={form.estimatedDeliveryDate} onChange={handleChange} required style={{ margin: 4 }} />
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <label htmlFor="Specifications">Specifications</label>
-            <input id="Specifications" name="Specifications" value={form.Specifications} onChange={handleChange} required style={{ margin: 4 }} />
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <label htmlFor="status">Status</label>
-            <input id="status" name="status" value={form.status} onChange={handleChange} required style={{ margin: 4 }} />
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <label htmlFor="productcost">Product Cost</label>
-            <input id="productcost" name="productcost" value={form.productcost} onChange={handleChange} required style={{ margin: 4 }} />
-          </div>
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '1rem', gridColumn: '1 / -1' }}>
-          <button type="submit" style={{ margin: 8, padding: '0.7rem 2rem', fontSize: '1.1rem', background: '#1976d2', color: 'white', border: 'none', borderRadius: 6, boxShadow: '0 1px 4px #1976d233', cursor: 'pointer', fontWeight: 500 }}>Add Product</button>
-        </div>
-      </form>
+        </form>
       </div>
 
       <div style={{ background: 'white', borderRadius: 10, boxShadow: '0 2px 8px #0001', padding: '2.5rem', marginBottom: '2.5rem', maxWidth: '1200px', marginLeft: 'auto', marginRight: 'auto' }}>
