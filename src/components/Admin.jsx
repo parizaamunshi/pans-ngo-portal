@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import Payment from './Payment';
 // Example data for leaders and artisans
 const initialLeaders = [
   {
@@ -225,6 +226,7 @@ function Admin() {
           </div>
         ))}
       </div>
+      <Payment />
     </div>
   );
 }
