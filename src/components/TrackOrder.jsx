@@ -13,7 +13,7 @@ const Timeline = () => {
             <ol style={{ listStyle: "none", padding: 0 }}>
                 <li>
                     <button
-                        onClick={() => navigate("/order-details")}
+                        onClick={() => navigate("/orderdetails")}
                         style={{ cursor: "pointer", background: "none", border: "none", color: "#1976d2", fontSize: "1.1em" }}
                     >
                         1. Order Received
