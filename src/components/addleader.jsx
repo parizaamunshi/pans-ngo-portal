@@ -1,6 +1,8 @@
+import axios from 'axios';
 import React, { useState } from 'react'
 
-const Appleader = () => {
+const addleader = () => {
+  
   const [activeForm, setActiveForm] = useState(null);
   const [formData, setFormData] = useState({
     leader_id: '',
@@ -14,6 +16,7 @@ const Appleader = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+
     setFormData(prev => ({
       ...prev,
       [name]: value
@@ -23,6 +26,7 @@ const Appleader = () => {
   const handleFormSubmit = (formType) => {
     console.log(`⁠${formType} form submitted:⁠, formData`);
     // Here you would typically send data to an API
+    console.log("Form submitted:", formData);
     alert(`${formType} operation completed!`);
     setFormData({ leader_id: '', cluster_id: '', leader_rating: '', cluster_rating: '', skills: '', years_of_experience: '', searchName: '' });
     setActiveForm(null);
@@ -191,186 +195,186 @@ const Appleader = () => {
     </div>
   );
 
-  const renderEditForm = () => (
-    <div style={{ 
-      marginTop: '20px', 
-      padding: '30px', 
-      backgroundColor: 'white',
-      borderRadius: '12px', 
-      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-      border: '1px solid #e0e0e0',
-      width: '100%' 
-    }}>
-      <h3 style={{ color: '#1f2937', marginBottom: '20px', fontSize: '24px' }}>Edit Leader</h3>
-      <div style={{ marginBottom: '15px' }}>
-        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', color: '#1f2937', fontSize: '16px' }}>Search Leader by ID:</label>
-        <input
-          type="number"
-          name="searchName"
-          value={formData.searchName}
-          onChange={handleInputChange}
-          placeholder="Enter leader ID to edit"
-          style={{
-            width: '100%',
-            padding: '12px',
-            border: '2px solid #e5e7eb',
-            borderRadius: '6px',
-            fontSize: '16px',
-            color: '#1f2937'
-          }}
-        />
-      </div>
-      <div style={{ marginBottom: '15px' }}>
-        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', color: '#1f2937', fontSize: '16px' }}>New Leader ID:</label>
-        <input
-          type="number"
-          name="leader_id"
-          value={formData.leader_id}
-          onChange={handleInputChange}
-          placeholder="Enter new leader ID (optional)"
-          style={{
-            width: '100%',
-            padding: '12px',
-            border: '2px solid #e5e7eb',
-            borderRadius: '6px',
-            fontSize: '16px',
-            color: '#1f2937'
-          }}
-        />
-      </div>
-      <div style={{ marginBottom: '15px' }}>
-        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', color: '#1f2937', fontSize: '16px' }}>New Cluster ID:</label>
-        <input
-          type="number"
-          name="cluster_id"
-          value={formData.cluster_id}
-          onChange={handleInputChange}
-          placeholder="Enter new cluster ID (optional)"
-          style={{
-            width: '100%',
-            padding: '12px',
-            border: '2px solid #e5e7eb',
-            borderRadius: '6px',
-            fontSize: '16px',
-            color: '#1f2937'
-          }}
-        />
-      </div>
-      <div style={{ marginBottom: '15px' }}>
-        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', color: '#1f2937', fontSize: '16px' }}>New Leader Rating (1-5):</label>
-        <select
-          name="leader_rating"
-          value={formData.leader_rating}
-          onChange={handleInputChange}
-          style={{
-            width: '100%',
-            padding: '12px',
-            border: '2px solid #e5e7eb',
-            borderRadius: '6px',
-            fontSize: '16px',
-            color: '#1f2937'
-          }}
-        >
-          <option value="">Select new leader rating (optional)</option>
-          <option value="1">1 - Poor</option>
-          <option value="2">2 - Fair</option>
-          <option value="3">3 - Good</option>
-          <option value="4">4 - Very Good</option>
-          <option value="5">5 - Excellent</option>
-        </select>
-      </div>
-      <div style={{ marginBottom: '15px' }}>
-        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', color: '#1f2937', fontSize: '16px' }}>New Cluster Rating (1-5):</label>
-        <select
-          name="cluster_rating"
-          value={formData.cluster_rating}
-          onChange={handleInputChange}
-          style={{
-            width: '100%',
-            padding: '12px',
-            border: '2px solid #e5e7eb',
-            borderRadius: '6px',
-            fontSize: '16px',
-            color: '#1f2937'
-          }}
-        >
-          <option value="">Select new cluster rating (optional)</option>
-          <option value="1">1 - Poor</option>
-          <option value="2">2 - Fair</option>
-          <option value="3">3 - Good</option>
-          <option value="4">4 - Very Good</option>
-          <option value="5">5 - Excellent</option>
-        </select>
-      </div>
-      <div style={{ marginBottom: '15px' }}>
-        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', color: '#1f2937', fontSize: '16px' }}>New Skills (comma-separated):</label>
-        <input
-          type="text"
-          name="skills"
-          value={formData.skills}
-          onChange={handleInputChange}
-          placeholder="Enter new skills (optional)"
-          style={{
-            width: '100%',
-            padding: '12px',
-            border: '2px solid #e5e7eb',
-            borderRadius: '6px',
-            fontSize: '16px',
-            color: '#1f2937'
-          }}
-        />
-      </div>
-      <div style={{ marginBottom: '15px' }}>
-        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', color: '#1f2937', fontSize: '16px' }}>New Years of Experience:</label>
-        <input
-          type="number"
-          name="years_of_experience"
-          value={formData.years_of_experience}
-          onChange={handleInputChange}
-          placeholder="Enter new years of experience (optional)"
-          min="0"
-          style={{
-            width: '100%',
-            padding: '12px',
-            border: '2px solid #e5e7eb',
-            borderRadius: '6px',
-            fontSize: '16px',
-            color: '#1f2937'
-          }}
-        />
-      </div>
-      <div style={{ display: 'flex', gap: '10px' }}>
-        <button
-          onClick={() => handleFormSubmit('Edit Leader')}
-          style={{
-            padding: '12px 24px',
-            backgroundColor: '#007bff',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            fontSize: '16px'
-          }}
-        >
-          Update Leader
-        </button>
-        <button
-          onClick={() => setActiveForm(null)}
-          style={{
-            padding: '12px 24px',
-            backgroundColor: '#6c757d',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            fontSize: '16px'
-          }}
-        >
-          Cancel
-        </button>
-      </div>
-    </div>
-  );
+//   const renderEditForm = () => (
+//     <div style={{ 
+//       marginTop: '20px', 
+//       padding: '30px', 
+//       backgroundColor: 'white',
+//       borderRadius: '12px', 
+//       boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+//       border: '1px solid #e0e0e0',
+//       width: '100%' 
+//     }}>
+//       <h3 style={{ color: '#1f2937', marginBottom: '20px', fontSize: '24px' }}>Edit Leader</h3>
+//       <div style={{ marginBottom: '15px' }}>
+//         <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', color: '#1f2937', fontSize: '16px' }}>Search Leader by ID:</label>
+//         <input
+//           type="number"
+//           name="searchName"
+//           value={formData.searchName}
+//           onChange={handleInputChange}
+//           placeholder="Enter leader ID to edit"
+//           style={{
+//             width: '100%',
+//             padding: '12px',
+//             border: '2px solid #e5e7eb',
+//             borderRadius: '6px',
+//             fontSize: '16px',
+//             color: '#1f2937'
+//           }}
+//         />
+//       </div>
+//       <div style={{ marginBottom: '15px' }}>
+//         <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', color: '#1f2937', fontSize: '16px' }}>New Leader ID:</label>
+//         <input
+//           type="number"
+//           name="leader_id"
+//           value={formData.leader_id}
+//           onChange={handleInputChange}
+//           placeholder="Enter new leader ID (optional)"
+//           style={{
+//             width: '100%',
+//             padding: '12px',
+//             border: '2px solid #e5e7eb',
+//             borderRadius: '6px',
+//             fontSize: '16px',
+//             color: '#1f2937'
+//           }}
+//         />
+//       </div>
+//       <div style={{ marginBottom: '15px' }}>
+//         <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', color: '#1f2937', fontSize: '16px' }}>New Cluster ID:</label>
+//         <input
+//           type="number"
+//           name="cluster_id"
+//           value={formData.cluster_id}
+//           onChange={handleInputChange}
+//           placeholder="Enter new cluster ID (optional)"
+//           style={{
+//             width: '100%',
+//             padding: '12px',
+//             border: '2px solid #e5e7eb',
+//             borderRadius: '6px',
+//             fontSize: '16px',
+//             color: '#1f2937'
+//           }}
+//         />
+//       </div>
+//       <div style={{ marginBottom: '15px' }}>
+//         <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', color: '#1f2937', fontSize: '16px' }}>New Leader Rating (1-5):</label>
+//         <select
+//           name="leader_rating"
+//           value={formData.leader_rating}
+//           onChange={handleInputChange}
+//           style={{
+//             width: '100%',
+//             padding: '12px',
+//             border: '2px solid #e5e7eb',
+//             borderRadius: '6px',
+//             fontSize: '16px',
+//             color: '#1f2937'
+//           }}
+//         >
+//           <option value="">Select new leader rating (optional)</option>
+//           <option value="1">1 - Poor</option>
+//           <option value="2">2 - Fair</option>
+//           <option value="3">3 - Good</option>
+//           <option value="4">4 - Very Good</option>
+//           <option value="5">5 - Excellent</option>
+//         </select>
+//       </div>
+//       <div style={{ marginBottom: '15px' }}>
+//         <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', color: '#1f2937', fontSize: '16px' }}>New Cluster Rating (1-5):</label>
+//         <select
+//           name="cluster_rating"
+//           value={formData.cluster_rating}
+//           onChange={handleInputChange}
+//           style={{
+//             width: '100%',
+//             padding: '12px',
+//             border: '2px solid #e5e7eb',
+//             borderRadius: '6px',
+//             fontSize: '16px',
+//             color: '#1f2937'
+//           }}
+//         >
+//           <option value="">Select new cluster rating (optional)</option>
+//           <option value="1">1 - Poor</option>
+//           <option value="2">2 - Fair</option>
+//           <option value="3">3 - Good</option>
+//           <option value="4">4 - Very Good</option>
+//           <option value="5">5 - Excellent</option>
+//         </select>
+//       </div>
+//       <div style={{ marginBottom: '15px' }}>
+//         <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', color: '#1f2937', fontSize: '16px' }}>New Skills (comma-separated):</label>
+//         <input
+//           type="text"
+//           name="skills"
+//           value={formData.skills}
+//           onChange={handleInputChange}
+//           placeholder="Enter new skills (optional)"
+//           style={{
+//             width: '100%',
+//             padding: '12px',
+//             border: '2px solid #e5e7eb',
+//             borderRadius: '6px',
+//             fontSize: '16px',
+//             color: '#1f2937'
+//           }}
+//         />
+//       </div>
+//       <div style={{ marginBottom: '15px' }}>
+//         <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', color: '#1f2937', fontSize: '16px' }}>New Years of Experience:</label>
+//         <input
+//           type="number"
+//           name="years_of_experience"
+//           value={formData.years_of_experience}
+//           onChange={handleInputChange}
+//           placeholder="Enter new years of experience (optional)"
+//           min="0"
+//           style={{
+//             width: '100%',
+//             padding: '12px',
+//             border: '2px solid #e5e7eb',
+//             borderRadius: '6px',
+//             fontSize: '16px',
+//             color: '#1f2937'
+//           }}
+//         />
+//       </div>
+//       <div style={{ display: 'flex', gap: '10px' }}>
+//         <button
+//           onClick={() => handleFormSubmit('Edit Leader')}
+//           style={{
+//             padding: '12px 24px',
+//             backgroundColor: '#007bff',
+//             color: 'white',
+//             border: 'none',
+//             borderRadius: '4px',
+//             cursor: 'pointer',
+//             fontSize: '16px'
+//           }}
+//         >
+//           Update Leader
+//         </button>
+//         <button
+//           onClick={() => setActiveForm(null)}
+//           style={{
+//             padding: '12px 24px',
+//             backgroundColor: '#6c757d',
+//             color: 'white',
+//             border: 'none',
+//             borderRadius: '4px',
+//             cursor: 'pointer',
+//             fontSize: '16px'
+//           }}
+//         >
+//           Cancel
+//         </button>
+//       </div>
+//     </div>
+//   );
 
   const renderDeleteForm = () => (
     <div style={{ 
@@ -384,13 +388,13 @@ const Appleader = () => {
     }}>
       <h3 style={{ color: '#1f2937', marginBottom: '20px', fontSize: '24px' }}>Delete Leader</h3>
       <div style={{ marginBottom: '15px' }}>
-        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', color: '#1f2937', fontSize: '16px' }}>Cluster ID:</label>
+        <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', color: '#1f2937', fontSize: '16px' }}>Leader ID:</label>
         <input
           type="number"
-          name="cluster_id"
-          value={formData.cluster_id}
+          name="leader_id"
+          value={formData.leader_id}
           onChange={handleInputChange}
-          placeholder="Enter cluster ID to delete leader"
+          placeholder="Enter Leader ID to delete leader"
           style={{
             width: '100%',
             padding: '12px',
@@ -478,7 +482,7 @@ const Appleader = () => {
           Add Leader
         </button>
         
-        <button
+        {/* <button
           onClick={() => setActiveForm('edit')}
           style={{
             padding: '15px 30px',
@@ -493,7 +497,7 @@ const Appleader = () => {
           }}
         >
           Edit Leader
-        </button>
+        </button> */}
         
         <button
           onClick={() => setActiveForm('delete')}
@@ -531,7 +535,6 @@ const Appleader = () => {
           <p>Select an action above to manage leaders:</p>
           <ul style={{ listStyle: 'none', padding: 0 }}>
             <li>📝 <strong>Add Leader:</strong> Create a new leader with all details</li>
-            <li>✏️ <strong>Edit Leader:</strong> Search and update existing leader information</li>
             <li>🗑️ <strong>Delete Leader:</strong> Remove a leader by cluster ID</li>
           </ul>
         </div>
@@ -540,4 +543,4 @@ const Appleader = () => {
   )
 }
 
-export default Appleader;
+export default addleader;
