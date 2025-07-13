@@ -14,14 +14,7 @@ import Village2 from './components/villages/village2';
 import Village3 from './components/villages/village3';
 import Village4 from './components/villages/village4';
 import Village5 from './components/villages/village5';
-
 import Dashboard from './components/Dashboard';
-
-
-
-
-
-
 
 function Login() {
   const [role, setRole] = useState('admin');
