@@ -15,6 +15,7 @@ import Village3 from './components/villages/village3';
 import Village4 from './components/villages/village4';
 import Village5 from './components/villages/village5';
 import Dashboard from './components/Dashboard';
+import PhotoGeoLocator from './components/PhotoGeoLocator';
 
 function Login() {
   const [role, setRole] = useState('admin');
@@ -121,6 +122,7 @@ function App() {
         <Route path="/barcode" element={<Barcode />} />
         <Route path="/trackorder" element={<TrackOrder />} />
         <Route path="/feedback" element={<Feedback />} />
+        <Route path="/photogeolocator" element={<PhotoGeoLocator />} />
         <Route path="/orderdetails" element={<OrderDetails />} />
 
         <Route
