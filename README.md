@@ -9,3 +9,4 @@
 | Geotagged Image Uploads     | Artisans upload geotagged images of products during production to boost authenticity and traceability.                       |
 | User Feedback System         | Ranks top artisan clusters, boosting motivation and recognizing excellence.                           |
 | Customer Transparency      | Buyers can view artisan stories, progress updates, and delivery tracking, increasing product value and emotional connection. |
+| Payment Status Tracking	| Track whether payments to artisans are pending, in progress, or completed. 
